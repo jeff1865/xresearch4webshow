@@ -1,0 +1,6 @@
+1. Hbase scheme design for hot crawl
+2. 본문 추출기
+3. 본문 의미 분석기
+4. 개인 관심사 profile 및 추천엔진 개발 -- Solr 연결
+5. Web Show UI 개발 (정적, 동적)
+6. TBD 

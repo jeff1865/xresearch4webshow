@@ -30,20 +30,25 @@ public class ListLinks {
 	
 //	public static void 
 	
-	public static void main(String ... v) throws IOException {
-		System.out.println("Start Parsing ..");
-		getIMG();
-	}
+//	public static void main(String ... v) throws IOException {
+//		System.out.println("Start Parsing ..");
+//		getIMG();
+//	}
 	
-	public static void main0(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException {
 		System.out.println("Start Parse ...");
 //		Validate.isTrue(args.length == 1, "usage: supply url to fetch");
 		String url = "http://clien.net/cs2/bbs/board.php?bo_table=park";
-		url = "http://news.naver.com/";
+//		url = "http://news.naver.com/";
+//		url = "http://news.naver.com/main/list.nhn?mode=LSD&mid=sec&sid1=001";
+		url = "http://gall.dcinside.com/board/lists/?id=stock_new1";
+		url = "http://gall.dcinside.com/board/view/?id=stock_new1&no=1354581&page=1";
+		
 		print("Fetching %s...", url);
 
 		Document doc = Jsoup.connect(url).get();
 		Elements links = doc.select("a[href]");
+		Elements allLinks = doc.select("*");
 		Elements media = doc.select("[src]");
 		Elements imports = doc.select("link[href]");
 
@@ -55,15 +60,39 @@ public class ListLinks {
 			else
 				print(" * %s: <%s>", src.tagName(), src.attr("abs:src"));
 		}
-
+		
+		print("-------------------------------------------------------");
 		print("\nImports: (%d)", imports.size());
 		for (Element link : imports) {
 			print(" * %s <%s> (%s)", link.tagName(), link.attr("abs:href"), link.attr("rel"));
 		}
-
+		
+		print("-------------------------------------------------------");
 		print("\nLinks: (%d)", links.size());
 		for (Element link : links) {
 			print(" * a: <%s>  (%s)", link.attr("abs:href"), trim(link.text(), 35));
+		}
+		
+		print("-------------------------------------------------------");
+		print("\nLinks: (%d)", links.size());
+		for (Element link : links) {
+			print(" * a: <%s>  (%s)", link.attr("abs:href"), trim(link.text(), 35));
+		}
+		
+		print("-------------------------------------------------------");
+		print("\nUnLinks: (%d)", allLinks.size());
+		int i = 0;
+		for (Element elem : allLinks) {
+			
+			String val = null;
+			if(elem.hasText()){
+				if(elem.parents().select("a").size() == 0) {
+					System.out.println(i++ + " UnLinked Value :" + elem.toString());
+				}
+			}
+			
+			
+//			print("%s | %s", link.data(), link.toString());
 		}
 	}
 
