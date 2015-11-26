@@ -43,6 +43,8 @@ public class ListLinks {
 //		url = "http://news.naver.com/main/list.nhn?mode=LSD&mid=sec&sid1=001";
 		url = "http://gall.dcinside.com/board/lists/?id=stock_new1";
 		url = "http://gall.dcinside.com/board/view/?id=stock_new1&no=1354581&page=1";
+		url = "http://news.naver.com/main/list.nhn?mode=LSD&mid=sec&sid1=001";
+		
 		
 		print("Fetching %s...", url);
 
@@ -79,21 +81,21 @@ public class ListLinks {
 			print(" * a: <%s>  (%s)", link.attr("abs:href"), trim(link.text(), 35));
 		}
 		
-		print("-------------------------------------------------------");
-		print("\nUnLinks: (%d)", allLinks.size());
-		int i = 0;
-		for (Element elem : allLinks) {
-			
-			String val = null;
-			if(elem.hasText()){
-				if(elem.parents().select("a").size() == 0) {
-					System.out.println(i++ + " UnLinked Value :" + elem.toString());
-				}
-			}
-			
-			
-//			print("%s | %s", link.data(), link.toString());
-		}
+//		print("-------------------------------------------------------");
+//		print("\nUnLinks: (%d)", allLinks.size());
+//		int i = 0;
+//		for (Element elem : allLinks) {
+//			
+//			String val = null;
+//			if(elem.hasText()){
+//				if(elem.parents().select("a").size() == 0) {
+//					System.out.println(i++ + " UnLinked Value :" + elem.toString());
+//				}
+//			}
+//			
+//			
+////			print("%s | %s", link.data(), link.toString());
+//		}
 	}
 
 	private static void print(String msg, Object... args) {

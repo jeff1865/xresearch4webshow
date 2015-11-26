@@ -36,6 +36,44 @@ public class HtmlPasing {
 		}
 	}
 	
+	public static void unLinkedElement() {
+		File input = new File("res/NewFile.html");
+		try {
+			Document doc = Jsoup.parse(input, "UTF-8", "");
+//			System.out.println(doc.ownText());
+			System.out.println("-----------------------");
+		
+			
+			
+			List<TextNode> textNodes = doc.textNodes();
+			
+			for(TextNode tn : textNodes) {
+//				System.out.println("Parent :" + tn.parent() + "--->" + tn.text());
+				System.out.println("--->" + tn.text());
+			}
+			
+			
+			
+			
+//			Elements elem = doc.getAllElements();
+//			System.out.println("Size :" + elem.size());
+//					
+//			
+//			Elements links = doc.select("a[href]");
+//			
+//			print("\nLinks: (%d)", links.size());
+//	        for (Element link : links) {
+//	            print(" * a: <%s>  (%s)", link.attr("abs:href"), trim(link.text(), 35));
+//	        }
+			
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	} 
+	
+	
 	private static String trim(String s, int width) {
         if (s.length() > width)
             return s.substring(0, width-1) + ".";
@@ -50,7 +88,8 @@ public class HtmlPasing {
 	
 	public static void main(String ... v) {
 		System.out.println("Start System .." + System.currentTimeMillis());
-		crawlPage();
+//		crawlPage();
+		unLinkedElement();
 	}
 	
 	public static void researchWithFile() {
