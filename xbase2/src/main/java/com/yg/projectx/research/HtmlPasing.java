@@ -36,6 +36,41 @@ public class HtmlPasing {
 		}
 	}
 	
+	public static void crawlPageFromURL() {
+		try {
+			Document doc = Jsoup.connect("http://gall.dcinside.com/board/lists/?id=stock_new1").get();
+			Elements elem = doc.getAllElements();
+			System.out.println("Size :" + elem.size());
+					
+			
+			Elements links = doc.select("a[href]");
+			
+			print("\nLinks: (%d)", links.size());
+	        for (Element link : links) {
+	            print(" * a: <%s>  (%s)", link.attr("abs:href"), trim(link.text(), 35));
+	            
+	            if(link.text() == null || link.text().trim().length() == 0) {
+	            	Elements img = link.select("img[src]");
+	            	print(" -- [IMG] --> (%s)", img.attr("abs:src"));
+	            }
+	            
+	        }
+			
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static void main(String ... v) {
+		System.out.println("Start System .." + System.currentTimeMillis());
+//		crawlPage();
+//		unLinkedElement();
+		crawlPageFromURL();
+	}
+	
+	
 	public static void unLinkedElement() {
 		File input = new File("res/NewFile.html");
 		try {
@@ -84,13 +119,6 @@ public class HtmlPasing {
 	private static void print(String msg, Object... args) {
         System.out.println(String.format(msg, args));
     }
-
-	
-	public static void main(String ... v) {
-		System.out.println("Start System .." + System.currentTimeMillis());
-//		crawlPage();
-		unLinkedElement();
-	}
 	
 	public static void researchWithFile() {
 		File input = new File("res/NewFile.html");
