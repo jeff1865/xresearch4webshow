@@ -10,6 +10,9 @@ import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.Admin;
 import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.ConnectionFactory;
+import org.apache.hadoop.hbase.util.Bytes;
+import org.apache.hadoop.hbase.client.Put;
+import org.apache.hadoop.hbase.client.Table;
 import org.apache.log4j.Logger;
 
 public class EnvManager {
@@ -42,15 +45,69 @@ public class EnvManager {
 				}
 		}
 	}
+	
+	public void addSampleData() {
+		log.info("Add Sample Data ..");
 		
+		Connection conn = null;
+		try {
+			conn = ConnectionFactory.createConnection(this.config);
+			Table table = conn.getTable(TableName.valueOf("xtest1448969007094"));
+			
+			Put put = new Put(Bytes.toBytes("ID_001_" + System.currentTimeMillis()));
+			put.addColumn(Bytes.toBytes("cf"), Bytes.toBytes("AAA001"), Bytes.toBytes("V001_" + System.currentTimeMillis()));
+			table.put(put);
+			
+			table.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if(conn != null)
+				try {
+					conn.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+		}
+	}
+	
+	public void getSampleData() {
+		log.info("Add Sample Data ..");
+		
+		Connection conn = null;
+		try {
+			conn = ConnectionFactory.createConnection(this.config);
+			Table table = conn.getTable(TableName.valueOf("xtest1448969007094"));
+			
+			Put put = new Put(Bytes.toBytes("ID_001_" + System.currentTimeMillis()));
+			put.addColumn(Bytes.toBytes("cf"), Bytes.toBytes("AAA001"), Bytes.toBytes("V001_" + System.currentTimeMillis()));
+			table.put(put);
+			
+			table.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if(conn != null)
+				try {
+					conn.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+		}
+		
+	}
+	
 	public static void main (String ... v) {
 		EnvManager test = new EnvManager();
+		test.addSampleData();
 		
-		HTableDescriptor tableDesc = new HTableDescriptor(TableName.valueOf("xtest" + System.currentTimeMillis()));
-		HColumnDescriptor cf = new HColumnDescriptor("cf");
-		tableDesc.addFamily(cf);
-		
-		test.createNewTable(tableDesc);
+//		HTableDescriptor tableDesc = new HTableDescriptor(TableName.valueOf("xtest" + System.currentTimeMillis()));
+//		HColumnDescriptor cf = new HColumnDescriptor("cf");
+//		tableDesc.addFamily(cf);
+//		
+//		test.createNewTable(tableDesc);
 		System.out.println("Successfully created .. " + System.currentTimeMillis());
 	}
 }

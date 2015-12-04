@@ -1,6 +1,9 @@
 package com.yg.webshow.data;
 
+import java.io.IOException;
+
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hbase.client.HTable;
 
 public class CrawlDataBinder {
 	
@@ -23,6 +26,11 @@ public class CrawlDataBinder {
 	
 	public void addCrawlData(String url, String anchorText, String imgSrc) {
 		// ---
-		;
+		try {
+			HTable table = new HTable(this.config, TABLE_NAME);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
