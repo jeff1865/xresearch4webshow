@@ -1,6 +1,8 @@
 package com.yg.webshow.data;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
@@ -41,6 +43,19 @@ public abstract class AbstractTable {
 		
 	}
 	
+	protected void put(String key, String cf, Map<String, String> values) throws IOException {
+		Table table = this.getTable();
+		Put put = new Put(Bytes.toBytes(key));
+		
+		for(String cq : values.keySet()) {
+			put.addColumn(Bytes.toBytes(cf), Bytes.toBytes(cq), Bytes.toBytes(values.get(cq)));
+		}
+		
+		table.put(put);
+		table.close();
+	}
+	
+	
 	protected void put(String key, String cf, String colName, String value) throws IOException {
 		Table table = this.getTable();
 		
@@ -51,6 +66,21 @@ public abstract class AbstractTable {
 		table.close();
 	}
 	
+	protected Map<String, byte[]> get(String rowKey, String cf, String ... cols) throws IOException {
+		LinkedHashMap<String, byte[]> resTable = new LinkedHashMap<String, byte[]>();
+		
+		Table table = this.getTable();
+		Get get = new Get(Bytes.toBytes(rowKey));
+		Result result = table.get(get);
+		for(String colName : cols) {
+			byte[] value = result.getValue(Bytes.toBytes(cf), Bytes.toBytes(colName));
+			resTable.put(colName, value);
+		}
+		
+		table.close();
+		return resTable;
+	}
+	
 	protected String get(String rowKey, String cf, String colName) throws IOException {
 		Table table = this.getTable();
 		
@@ -58,7 +88,8 @@ public abstract class AbstractTable {
 		
 		Result result = table.get(get);
 		byte[] value = result.getValue(Bytes.toBytes(cf), Bytes.toBytes(colName));
-				
+		
+		table.close();		
 		return Bytes.toString(value);
 	}
 	

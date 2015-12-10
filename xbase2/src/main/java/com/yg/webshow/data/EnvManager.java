@@ -24,6 +24,15 @@ public class EnvManager {
 		this.config.set("hbase.master", "127.0.0.1");
 	}
 	
+	public Connection getNewConnection() {
+		try {
+			return ConnectionFactory.createConnection(this.config);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	public void createNewTable(HTableDescriptor tableDesc) {
 		Connection conn = null;
 				

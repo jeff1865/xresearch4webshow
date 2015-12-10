@@ -1,19 +1,24 @@
 package com.yg.webshow.data;
 
 import java.io.IOException;
+import java.util.Hashtable;
+import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.ConnectionFactory;
+import org.apache.hadoop.hbase.util.Bytes;
+
+import com.yg.webshow.util.DateUtil;
 
 public class CrawlTable extends AbstractTable {
 	public static final String TN_CRAWL = "crawl1449569734683";
 	public static final String CF_MAIN = "cr1";
 	public static final String CN_KEY = "cf_m";
-	public static final String CN_DT_REG = "regdt";
+	public static final String CN_DT_REG = "reg";
 	public static final String CQ_ANCHOR = "ac_txt";
-	
+		
 	private Connection conn = null;
 	
 	public CrawlTable(Connection conn) {
@@ -22,11 +27,41 @@ public class CrawlTable extends AbstractTable {
 		
 	public void insertCrawledUrl(String siteId, String url, String anchorText) {
 		try {
-			this.put(siteId + "_" + url, CF_MAIN, CQ_ANCHOR, anchorText);
+			Hashtable<String, String> htVal = new Hashtable<String, String>();
+			htVal.put(CQ_ANCHOR, anchorText);
+			htVal.put(CN_DT_REG, DateUtil.getCurrent());
+			
+			this.put(siteId + "_" + url, CF_MAIN, htVal);
+//			this.put(siteId + "_" + url, CF_MAIN, CQ_ANCHOR, anchorText);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+	
+	public CrawlRow getRawData(String siteId, String url) {
+		CrawlRow resRow = null;
+		
+		try {
+			Map<String, byte[]> res = this.get(siteId + "_" + url, CF_MAIN, CQ_ANCHOR, CN_DT_REG);
+//			System.out.println("-----" + res);;
+			
+			
+			if(res != null && res.get(CN_DT_REG) != null && res.size() > 0) {
+				resRow = new CrawlRow() ;
+				resRow.setUrl(url);
+				resRow.setSiteId(siteId);
+				resRow.setKey(siteId + "_" + url);
+				resRow.setAnchor(Bytes.toString(res.get(CQ_ANCHOR)));
+				resRow.setCraetedAt(Bytes.toString(res.get(CN_DT_REG)));
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+				
+		return resRow;
+	}
+	
 	
 	public String getAchorText(String siteId, String url) {
 		try {
@@ -55,7 +90,7 @@ public class CrawlTable extends AbstractTable {
 //			tblCrawl.createTable("cr1", "cr2");
 //			System.out.println("Table Creation Success.. ");
 			
-			tblCrawl.insertCrawledUrl("2", "http://www.naver.com", "네이버 NAVER" + System.currentTimeMillis());
+			tblCrawl.insertCrawledUrl("2", "http://www.naver.com", "네이버 x NAVER" + System.currentTimeMillis());
 			System.out.println("1. Successfully Data Added ..");
 			
 			String anchorText = tblCrawl.getAchorText("1", "http://www.naver.com");
