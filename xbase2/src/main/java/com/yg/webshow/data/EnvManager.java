@@ -110,13 +110,15 @@ public class EnvManager {
 	
 	public static void main (String ... v) {
 		EnvManager test = new EnvManager();
-		test.addSampleData();
+//		test.addSampleData();
 		
-//		HTableDescriptor tableDesc = new HTableDescriptor(TableName.valueOf("xtest" + System.currentTimeMillis()));
-//		HColumnDescriptor cf = new HColumnDescriptor("cf");
-//		tableDesc.addFamily(cf);
-//		
-//		test.createNewTable(tableDesc);
+		HTableDescriptor tableDesc = new HTableDescriptor(TableName.valueOf("newslist"));
+		HColumnDescriptor cf = new HColumnDescriptor("cr1");
+		HColumnDescriptor cf2 = new HColumnDescriptor("cr2");
+		tableDesc.addFamily(cf);
+		tableDesc.addFamily(cf2);
+		test.createNewTable(tableDesc);
+		
 		System.out.println("Successfully created .. " + System.currentTimeMillis());
 	}
 }

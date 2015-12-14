@@ -10,6 +10,7 @@ import com.yg.webshow.crawl.CrawlData;
 import com.yg.webshow.data.CrawlRow;
 import com.yg.webshow.data.CrawlTable;
 import com.yg.webshow.data.EnvManager;
+import com.yg.webshow.data.NewsTable;
 
 public class PageAnalyzer {
 	private static Logger log = Logger.getLogger(PageAnalyzer.class);
@@ -25,9 +26,21 @@ public class PageAnalyzer {
 		this.envManaer = new EnvManager();
 	}
 	
+	public void updateNews() {
+		NewsTable newsTable = new NewsTable(this.envManaer.getNewConnection());
+		List<CrawlData> newData = this.getNewData();
+		log.info("News Crawled :" + newData.size());
+		
+		for (CrawlData cd : newData) {
+			newsTable.insertNews(this.siteId, cd.getUrl(), cd.getAnchorText());
+		}
+		
+		newsTable.close();
+	}
+	
 	public List<CrawlData> getNewData() {
 		ArrayList<CrawlData> resData = new ArrayList<CrawlData>();
-		
+				
 		CrawlTable crawlTable = new CrawlTable(this.envManaer.getNewConnection());
 		Crawl crawl = new Crawl(this.seedUrl);
 		List<CrawlData> innerURL = crawl.getInnerURL();
@@ -43,19 +56,23 @@ public class PageAnalyzer {
 			}
 //			System.out.println( i++ + ".\t" + crawlData);
 		}
-				
+		
+		crawlTable.close();
 		return resData;
 	}
 	
 	
 	public static void main(String ... v) {
 		PageAnalyzer pageAnalyzer = new PageAnalyzer("3", "http://news.naver.com/main/home.nhn");
-		List<CrawlData> newData = pageAnalyzer.getNewData();
+//		PageAnalyzer pageAnalyzer = new PageAnalyzer("4", "http://clien.net/cs2/bbs/board.php?bo_table=park");
+//		List<CrawlData> newData = pageAnalyzer.getNewData();
+//		
+//		System.out.println("---------- [NEWS] ----------");
+//		int i = 0;
+//		for(CrawlData crawlData : newData) {
+//			System.out.println(i++ + "\t" + crawlData);
+//		}
 		
-		System.out.println("---------- [NEWS] ----------");
-		int i = 0;
-		for(CrawlData crawlData : newData) {
-			System.out.println(i++ + "\t" + crawlData);
-		}
+		pageAnalyzer.updateNews();
 	}
 }

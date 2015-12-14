@@ -15,12 +15,9 @@ import com.yg.webshow.util.DateUtil;
 public class CrawlTable extends AbstractTable {
 	public static final String TN_CRAWL = "crawl1449569734683";
 	public static final String CF_MAIN = "cr1";
-	public static final String CN_KEY = "cf_m";
 	public static final String CN_DT_REG = "reg";
 	public static final String CQ_ANCHOR = "ac_txt";
 		
-	private Connection conn = null;
-	
 	public CrawlTable(Connection conn) {
 		super(conn);
 	}
