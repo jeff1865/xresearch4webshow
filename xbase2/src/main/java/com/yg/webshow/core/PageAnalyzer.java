@@ -10,6 +10,7 @@ import com.yg.webshow.crawl.CrawlData;
 import com.yg.webshow.data.CrawlRow;
 import com.yg.webshow.data.CrawlTable;
 import com.yg.webshow.data.EnvManager;
+import com.yg.webshow.data.NewsRow;
 import com.yg.webshow.data.NewsTable;
 
 public class PageAnalyzer {
@@ -61,10 +62,21 @@ public class PageAnalyzer {
 		return resData;
 	}
 	
+	@Deprecated
+	public void printNews() {
+		NewsTable newsTable = new NewsTable(this.envManaer.getNewConnection());
+		List<NewsRow> news = newsTable.getNews(10, "0000004", "0000005");
+		
+		int i = 0;
+		for(NewsRow newsRow : news) {
+			System.out.println(i++ + "\t" + newsRow);
+		}
+	}
+	
 	
 	public static void main(String ... v) {
-		PageAnalyzer pageAnalyzer = new PageAnalyzer("3", "http://news.naver.com/main/home.nhn");
-//		PageAnalyzer pageAnalyzer = new PageAnalyzer("4", "http://clien.net/cs2/bbs/board.php?bo_table=park");
+//		PageAnalyzer pageAnalyzer = new PageAnalyzer("3", "http://news.naver.com/main/home.nhn");
+		PageAnalyzer pageAnalyzer = new PageAnalyzer("4", "http://clien.net/cs2/bbs/board.php?bo_table=park");
 //		List<CrawlData> newData = pageAnalyzer.getNewData();
 //		
 //		System.out.println("---------- [NEWS] ----------");
@@ -73,6 +85,7 @@ public class PageAnalyzer {
 //			System.out.println(i++ + "\t" + crawlData);
 //		}
 		
-		pageAnalyzer.updateNews();
+//		pageAnalyzer.updateNews();
+		pageAnalyzer.printNews();
 	}
 }
