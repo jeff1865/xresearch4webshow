@@ -3,9 +3,11 @@ package com.yg.projectx.research;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.DataNode;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
@@ -67,7 +69,51 @@ public class HtmlPasing {
 		System.out.println("Start System .." + System.currentTimeMillis());
 //		crawlPage();
 //		unLinkedElement();
-		crawlPageFromURL();
+//		crawlPageFromURL();
+				
+		extractContexts();
+	}
+	
+	public static void extractContexts() {
+		try {
+			Document doc = Jsoup.connect("http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=43201344").get();
+//			Elements elem = doc.getAllElements();
+//			
+//			System.out.println("Element >" + elem);
+			
+			System.out.println("doc >" + doc.title());
+			
+			System.out.println("body >" + doc.body().text());
+			
+			Element body = doc.body();
+			for(DataNode dn :body.dataNodes()) {
+				System.out.println(">>>>" + dn);
+			}
+			
+			Elements allElem = doc.body().getAllElements();
+			
+			System.out.println("Size >" + allElem.size());;
+			
+			ListIterator<Element> listIterator = allElem.listIterator();
+			
+			while(listIterator.hasNext()) 
+			{
+				System.out.println(">>" + listIterator.next().tagName());
+			}
+			
+//			int i = 0;
+//			for(TextNode tn : doc.body().textNodes()) {
+//				
+//				
+//				System.out.println(i++ + "\t" + tn.text());
+//			}
+			
+			System.out.println("Text >" + doc.body().text());;
+						
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	

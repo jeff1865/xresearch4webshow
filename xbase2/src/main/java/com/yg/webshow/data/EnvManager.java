@@ -112,7 +112,7 @@ public class EnvManager {
 		EnvManager test = new EnvManager();
 //		test.addSampleData();
 		
-		HTableDescriptor tableDesc = new HTableDescriptor(TableName.valueOf("newslist"));
+		HTableDescriptor tableDesc = new HTableDescriptor(TableName.valueOf("crawl"));
 		HColumnDescriptor cf = new HColumnDescriptor("cr1");
 		HColumnDescriptor cf2 = new HColumnDescriptor("cr2");
 		tableDesc.addFamily(cf);

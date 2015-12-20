@@ -13,7 +13,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 import com.yg.webshow.util.DateUtil;
 
 public class CrawlTable extends AbstractTable {
-	public static final String TN_CRAWL = "crawl1449569734683";
+	public static final String TN_CRAWL = "crawl";
 	public static final String CF_MAIN = "cr1";
 	public static final String CN_DT_REG = "reg";
 	public static final String CQ_ANCHOR = "ac_txt";
