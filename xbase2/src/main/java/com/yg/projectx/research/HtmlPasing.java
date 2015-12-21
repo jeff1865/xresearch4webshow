@@ -71,7 +71,36 @@ public class HtmlPasing {
 //		unLinkedElement();
 //		crawlPageFromURL();
 				
-		extractContexts();
+//		extractContexts();
+		extContexts();
+	}
+	
+	public static void extContexts() {
+		try {
+			Document doc = Jsoup.connect("http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=43201344").get();
+			Elements elem = doc.getAllElements();
+			
+			ListIterator<Element> ItlElem = elem.listIterator();
+			
+			while(ItlElem.hasNext()) {
+				;
+				Element emt = ItlElem.next();
+//				System.out.println("Element :" + emt.getClass() + "--->" + emt.tagName() + "--->" + emt.ownText());
+				
+				String data = null;
+				List<TextNode> textNodes = emt.textNodes();
+				for(TextNode tn : textNodes) {
+					data = tn.text();
+					if(data.trim().length() > 0)
+						System.out.println("TextNode >" + tn.text());
+				}
+				
+			}
+			
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static void extractContexts() {
@@ -82,12 +111,15 @@ public class HtmlPasing {
 //			System.out.println("Element >" + elem);
 			
 			System.out.println("doc >" + doc.title());
-			
 			System.out.println("body >" + doc.body().text());
 			
 			Element body = doc.body();
+			
+			body.getAllElements();
+			
+			
 			for(DataNode dn :body.dataNodes()) {
-				System.out.println(">>>>" + dn);
+				System.out.println(">>>>" + dn + " --- " + dn.getWholeData());
 			}
 			
 			Elements allElem = doc.body().getAllElements();
@@ -101,12 +133,7 @@ public class HtmlPasing {
 				System.out.println(">>" + listIterator.next().tagName());
 			}
 			
-//			int i = 0;
-//			for(TextNode tn : doc.body().textNodes()) {
-//				
-//				
-//				System.out.println(i++ + "\t" + tn.text());
-//			}
+
 			
 			System.out.println("Text >" + doc.body().text());;
 						
