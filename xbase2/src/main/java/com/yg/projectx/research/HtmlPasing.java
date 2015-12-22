@@ -90,9 +90,11 @@ public class HtmlPasing {
 				String data = null;
 				List<TextNode> textNodes = emt.textNodes();
 				for(TextNode tn : textNodes) {
-					data = tn.text();
-					if(data.trim().length() > 0)
-						System.out.println("TextNode >" + tn.text());
+					if(tn.childNodeSize() == 0) { 
+						data = tn.text();
+						if(data.trim().length() > 0)
+							System.out.println("TextNode >" + tn.text());
+					}
 				}
 				
 			}
@@ -102,6 +104,29 @@ public class HtmlPasing {
 			e.printStackTrace();
 		}
 	}
+	
+	private boolean isLinkedNode(Node node) {
+		
+		Node pNode = node.parent();
+		if(pNode == null) return false;
+		
+		if(pNode instanceof Element) {
+			Element elem = (Element) pNode;
+			if(elem.tagName().trim().equalsIgnoreCase("body")) {
+				return false;
+			}
+			
+			if(elem.tagName().trim().equalsIgnoreCase("a")) {
+				return true;
+			} 
+			return this.isLinkedNode(pNode);		
+		} else {
+			this.isLinkedNode(pNode);
+		}
+				
+		return false;
+	}
+	
 	
 	public static void extractContexts() {
 		try {
