@@ -89,23 +89,24 @@ public class HtmlPasing {
 				
 				String data = null;
 				List<TextNode> textNodes = emt.textNodes();
+				
 				for(TextNode tn : textNodes) {
 					if(tn.childNodeSize() == 0) { 
 						data = tn.text();
-						if(data.trim().length() > 0)
-							System.out.println("TextNode >" + tn.text());
+						if(data.trim().length() > 0) {
+							if(!isLinkedNode(tn)) {
+								System.out.println("TextNode >" + tn.text() + "---" + elem.indexOf(emt));
+							}
+						}
 					}
 				}
-				
 			}
-			
-			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	private boolean isLinkedNode(Node node) {
+	private static boolean isLinkedNode(Node node) {
 		
 		Node pNode = node.parent();
 		if(pNode == null) return false;
@@ -119,12 +120,11 @@ public class HtmlPasing {
 			if(elem.tagName().trim().equalsIgnoreCase("a")) {
 				return true;
 			} 
-			return this.isLinkedNode(pNode);		
+			
+			return isLinkedNode(pNode);		
 		} else {
-			this.isLinkedNode(pNode);
+			return isLinkedNode(pNode);
 		}
-				
-		return false;
 	}
 	
 	
