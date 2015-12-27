@@ -77,7 +77,9 @@ public class HtmlPasing {
 	
 	public static void extContexts() {
 		try {
-			Document doc = Jsoup.connect("http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=43201344").get();
+			//http://news.chosun.com/site/data/html_dir/2015/12/25/2015122501493.html
+			//http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=43201344
+			Document doc = Jsoup.connect("http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700455.html").get();
 			Elements elem = doc.getAllElements();
 			
 			ListIterator<Element> ItlElem = elem.listIterator();
