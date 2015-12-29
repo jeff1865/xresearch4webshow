@@ -1,15 +1,16 @@
 package com.yg.webshow.crawl.webpage;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class UrlContext {
 	private String protocol ;
 	private String domain ;
 	private String resource ;
-	private LinkedHashMap<String, String> kvp ;
+	private Map<String, String> kvp ;
 	
 	public UrlContext() {
-		this.kvp = new LinkedHashMap<String, String>();
+		this.setKvp(new LinkedHashMap<String, String>());
 	}
 	
 	public String getProtocol() {
@@ -30,9 +31,19 @@ public class UrlContext {
 	public void setResource(String resource) {
 		this.resource = resource;
 	}
-	public LinkedHashMap<String, String> getKvp() {
+	public Map<String, String> getKvp() {
 		return kvp;
 	}
-		
-	//http://cafe.naver.com/ArticleRead.nhn?clubid=24513075&page=1&menuid=5&boardtype=L&articleid=21183&referrerAllArticles=false
+	public void setKvp(Map<String, String> kvp) {
+		this.kvp = kvp;
+	}
+	
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append(this.protocol).append("|");
+		sb.append(this.domain).append("|");
+		sb.append(this.resource).append("|");
+		sb.append(this.kvp);
+		return sb.toString();
+	}
 }

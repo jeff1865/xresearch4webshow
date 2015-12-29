@@ -1,5 +1,6 @@
 package com.yg.webshow.crawl.webpage;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -8,6 +9,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.jsoup.nodes.Node;
+import org.mortbay.log.Log;
 
 public class WebDocUtil {
 		
@@ -36,6 +38,17 @@ public class WebDocUtil {
 	public UrlContext getUrlContext(String url) {
 		UrlContext urlContext = new UrlContext() ;
 		
+		try {
+			URL uri = new URL(url);
+			urlContext.setProtocol(uri.getProtocol());
+			urlContext.setDomain(uri.getHost());
+			urlContext.setResource(uri.getPath());
+			urlContext.setKvp(this.parseQuery(uri.getQuery()));
+					
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+			
 		return urlContext ;
 	}
 	
@@ -51,8 +64,8 @@ public class WebDocUtil {
 		
 		return token;
 	}
-	
-	public Map<String, String> parseQuery(String query) {
+		
+	private Map<String, String> parseQuery(String query) {
 		LinkedHashMap<String, String> resMap = new LinkedHashMap<String, String>();
 				
 		StringTokenizer stkz = new StringTokenizer(query, "&");
@@ -62,9 +75,11 @@ public class WebDocUtil {
 			String[] tokens = kvp.split("=");
 			
 			if(tokens.length == 2) {
-				//TODO
+				resMap.put(tokens[0], tokens[1]);
+			} else if(tokens.length == 1) {
+				resMap.put(tokens[0], null);
 			} else {
-				//TODO
+				Log.info("Invalid query string :" + kvp);
 			}
 		}
 			
@@ -77,22 +92,14 @@ public class WebDocUtil {
 				
 		//Sample URL : http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700214.html
 		WebDocUtil webDocUtil = new WebDocUtil();
-		webDocUtil.getUrlPatternExpression("http://news.naver.com/main/read.nhn?oid=018&sid1=101&aid=0003435915&mid=shm&cid=428288&mode=LSD&nh=20151227114901");
-		System.out.println("------------------------");
-		webDocUtil.getUrlPatternExpression("http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700214.html");
-		System.out.println("------------------------");
+//		webDocUtil.getUrlPatternExpression("http://news.naver.com/main/read.nhn?oid=018&sid1=101&aid=0003435915&mid=shm&cid=428288&mode=LSD&nh=20151227114901");
+//		System.out.println("------------------------");
+//		webDocUtil.getUrlPatternExpression("http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700214.html");
+//		System.out.println("------------------------");
 		
-		try {
-			URL uri = new URL("http://news.naver.com/main/read.nhn?oid=018&sid1=101&aid=0003435915&mid=shm&cid=428288&mode=LSD&nh=20151227114901");
-//			uri = new URI("http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700214.html");
-			System.out.println(uri.getQuery());;
-			System.out.println(uri.getPath());
-			System.out.println(uri.getHost());
-			System.out.println(uri.getProtocol());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
+		UrlContext urlContext = webDocUtil.getUrlContext("http://news.naver.com/main/read.nhn?oid=018&sid1=&aid=0003435915&mid=shm&cid=428288&mode=LSD&nh=20151227114901");
+		System.out.println("--->>>" + urlContext);
+
 	}
 	
 }
