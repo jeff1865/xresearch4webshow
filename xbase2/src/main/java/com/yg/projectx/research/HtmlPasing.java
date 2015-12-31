@@ -72,7 +72,97 @@ public class HtmlPasing {
 //		crawlPageFromURL();
 				
 //		extractContexts();
+		
+//		extTest();
+		
 		extContexts();
+		
+		selectTest();
+	}
+	
+	public static void selectTest() {
+		Document doc;
+		try {
+			doc = Jsoup.connect("http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700455.html").get();
+			Elements elem = doc.select("article > div > div:eq(4)");
+			
+			System.out.println("TEXT>" + elem.text());
+						
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static void extTest() {
+		try {
+			Document doc = Jsoup.connect("http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700455.html").get();
+			Elements elem = doc.select("title");
+			Element title = elem.get(0);
+					
+			System.out.println("--->>>" + elem.size());
+			System.out.println(">> SiblingIndex >>" + title.siblingIndex());
+			System.out.println(">> SiblingNodeIndex >>" + title.siblingNodes());
+			
+			elem = doc.select("head");
+			Element head = elem.get(0);
+			
+			System.out.println("children elems of head >" + head.children());
+			System.out.println("children node of head >" + head.childNodes());
+			
+			
+//			int i = 0;
+//			Elements allElements = head.getAllElements();
+//			for(Element em : allElements) {
+//				System.out.println((i++) + ". " + em.tagName());
+//			}
+			
+			int i = 0;
+			Elements children = title.children();
+			for(Element em : children) {
+				System.out.println((i++) + ". " + em);
+			}
+ 			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static String getNodePath(String base, Node node) {
+		if(base == null) base = "";
+		
+		Node pNode = node.parentNode();
+		
+		String tmp = "unknown";
+		int elemIndex = -1;
+		if(node instanceof Element) {
+			Element elem = (Element)node;
+			tmp = elem.tagName();
+			
+			if(elem.parent() != null) {
+				elemIndex = elem.parent().childNodes().indexOf(elem);
+			}
+			
+		} else if(node instanceof DataNode) {
+			DataNode dataNode = (DataNode) node;
+			tmp = dataNode.toString();
+		} else if(node instanceof TextNode) {
+			TextNode textNode = (TextNode) node;
+			tmp = textNode.getWholeText();
+		}
+		
+		if(elemIndex == -1) 
+			elemIndex = node.siblingIndex();
+		
+//		base = tmp + "[" + elemIndex + ":" + node.siblingNodes().size() + "]>" + base;
+		base = tmp + "[" + elemIndex + "]>" + base;
+		
+		pNode = node.parentNode();
+		if(pNode != null) {
+			base = getNodePath(base, pNode);
+		}
+		
+		return base;
 	}
 	
 	public static void extContexts() {
@@ -97,7 +187,7 @@ public class HtmlPasing {
 						data = tn.text();
 						if(data.trim().length() > 0) {
 							if(!isLinkedNode(tn)) {
-								System.out.println("TextNode >" + tn.text() + "---" + elem.indexOf(emt));
+								System.out.println(getNodePath(null, tn) + ">>TextNode >" + tn.text() + "---" + elem.indexOf(emt));
 							}
 						}
 					}
