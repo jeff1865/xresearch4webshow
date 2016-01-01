@@ -78,14 +78,50 @@ public class HtmlPasing {
 		extContexts();
 		
 		selectTest();
+		
+		System.out.println("------------------");
+		
+		domSelectTest();
+	}
+	
+	public static void domSelectTest() {
+		
+		Document doc;
+		try {
+			doc = Jsoup.connect("http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700455.html").get();
+//			Elements elem = doc.select("article > div:eq(1) > div:eq(4)");
+			
+			Elements elem = doc.select("body");
+			
+			Element body = elem.get(0);
+			
+			System.out.println(body.childNodeSize() + "/" + body.children().size());
+			
+			String data = body.child(3).child(2).child(1).data();
+//			System.out.println("Data >>> " + data);
+			
+			
+			Element child = body.child(3).child(2).child(1).child(1).child(20);
+			System.out.println("TagName >>>" + child.tagName());
+			
+			System.out.println("Text >>> " + body.child(3).child(2).child(1).child(1).text());
+			
+			System.out.println("Size>" + elem.size());
+						
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	public static void selectTest() {
 		Document doc;
 		try {
 			doc = Jsoup.connect("http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700455.html").get();
-			Elements elem = doc.select("article > div:eq(1) > div:eq(4)");
+//			Elements elem = doc.select("article > div:eq(1) > div:eq(4)");
 			
+			Elements elem = doc.select("article > div:eq(1) > div:eq(2)");
 			System.out.println("TEXT>" + elem.text());
 						
 		} catch (IOException e) {
@@ -140,7 +176,8 @@ public class HtmlPasing {
 			tmp = elem.tagName();
 			
 			if(elem.parent() != null) {
-				elemIndex = elem.parent().childNodes().indexOf(elem);
+//				elemIndex = elem.parent().childNodes().indexOf(elem);
+				elemIndex = elem.parent().children().indexOf(elem);
 			}
 			
 		} else if(node instanceof DataNode) {
@@ -151,8 +188,8 @@ public class HtmlPasing {
 			tmp = textNode.getWholeText();
 		}
 		
-		if(elemIndex == -1) 
-			elemIndex = node.siblingIndex();
+//		if(elemIndex == -1) 
+//			elemIndex = node.siblingIndex();
 		
 //		base = tmp + "[" + elemIndex + ":" + node.siblingNodes().size() + "]>" + base;
 		base = tmp + "[" + elemIndex + "]>" + base;
