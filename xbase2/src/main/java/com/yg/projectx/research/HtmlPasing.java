@@ -84,7 +84,7 @@ public class HtmlPasing {
 		Document doc;
 		try {
 			doc = Jsoup.connect("http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700455.html").get();
-			Elements elem = doc.select("article > div > div:eq(4)");
+			Elements elem = doc.select("article > div:eq(1) > div:eq(4)");
 			
 			System.out.println("TEXT>" + elem.text());
 						
