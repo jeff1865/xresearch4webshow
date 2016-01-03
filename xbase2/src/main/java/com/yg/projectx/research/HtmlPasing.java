@@ -104,7 +104,7 @@ public class HtmlPasing {
 			Element child = body.child(3).child(2).child(1).child(1).child(20);
 			System.out.println("TagName >>>" + child.tagName());
 			
-			System.out.println("Text >>> " + body.child(3).child(2).child(1).child(1).text());
+			System.out.println("Text >>> " + body.child(3).child(2).child(1).child(1).child(20).text());
 			
 			System.out.println("Size>" + elem.size());
 						
