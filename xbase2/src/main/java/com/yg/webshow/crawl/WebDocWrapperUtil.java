@@ -1,4 +1,4 @@
-package com.yg.webshow.crawl.webpage;
+package com.yg.webshow.crawl;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -11,10 +11,20 @@ import java.util.StringTokenizer;
 import org.jsoup.nodes.Node;
 import org.mortbay.log.Log;
 
-public class WebDocUtil {
+public class WebDocWrapperUtil {
 		
-	public WebDocUtil() {
+	public WebDocWrapperUtil() {
 		;
+	}
+	
+	//TODO
+	public String getNodePathPatternExpression(Node node) {
+		return null;
+	} 
+	
+	//TODO
+	public String getNodePath(Node node) {
+		return null;
 	}
 	
 	public String getUrlPatternExpression(String url) {
@@ -29,12 +39,7 @@ public class WebDocUtil {
 		
 		return null;
 	}
-	
-	public String getNodePath(Node noed) {
 		
-		return null;
-	}
-	
 	public UrlContext getUrlContext(String url) {
 		UrlContext urlContext = new UrlContext() ;
 		
@@ -52,7 +57,7 @@ public class WebDocUtil {
 		return urlContext ;
 	}
 	
-	public String getPatternExpression(String token) {
+	private String getPatternExpression(String token) {
 		String digitReg = "[0-9]+";
 		if(token.matches(digitReg)) {
 			return "%d[" + token.length() + "]";
@@ -91,7 +96,7 @@ public class WebDocUtil {
 		System.out.println("Activate an ejection mode !!");
 				
 		//Sample URL : http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700214.html
-		WebDocUtil webDocUtil = new WebDocUtil();
+		WebDocWrapperUtil webDocUtil = new WebDocWrapperUtil();
 //		webDocUtil.getUrlPatternExpression("http://news.naver.com/main/read.nhn?oid=018&sid1=101&aid=0003435915&mid=shm&cid=428288&mode=LSD&nh=20151227114901");
 //		System.out.println("------------------------");
 //		webDocUtil.getUrlPatternExpression("http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700214.html");

@@ -1,4 +1,4 @@
-package com.yg.webshow.crawl.webpage;
+package com.yg.webshow.crawl;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

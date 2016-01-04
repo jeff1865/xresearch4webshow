@@ -13,15 +13,15 @@ import com.yg.webshow.data.EnvManager;
 import com.yg.webshow.data.NewsRow;
 import com.yg.webshow.data.NewsTable;
 
-public class PageAnalyzer {
-	private static Logger log = Logger.getLogger(PageAnalyzer.class);
+public class CrawlUnitJob {
+	private static Logger log = Logger.getLogger(CrawlUnitJob.class);
 	
 	private String siteId = null;
 	private String seedUrl = null;
 	
 	public EnvManager envManaer = null;
 	
-	public PageAnalyzer(String id, String seed) {
+	public CrawlUnitJob(String id, String seed) {
 		this.siteId = id;
 		this.seedUrl = seed;
 		this.envManaer = new EnvManager();
@@ -76,7 +76,7 @@ public class PageAnalyzer {
 	
 	public static void main(String ... v) {
 //		PageAnalyzer pageAnalyzer = new PageAnalyzer("3", "http://news.naver.com/main/home.nhn");
-		PageAnalyzer pageAnalyzer = new PageAnalyzer("4", "http://clien.net/cs2/bbs/board.php?bo_table=park");
+		CrawlUnitJob pageAnalyzer = new CrawlUnitJob("4", "http://clien.net/cs2/bbs/board.php?bo_table=park");
 //		List<CrawlData> newData = pageAnalyzer.getNewData();
 //		
 //		System.out.println("---------- [NEWS] ----------");

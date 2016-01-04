@@ -1,4 +1,4 @@
-package com.yg.webshow.crawl.webpage;
+package com.yg.webshow.crawl;
 
 import java.io.IOException;
 import java.util.List;
@@ -9,7 +9,7 @@ import org.jsoup.nodes.Element;
 
 //TODO Page URL RgularExpression Changer
 //TODO Data Scheme to analyze WebPage
-public class WebPageProcessor {
+public class PageUnitProcessor {
 	
 	private String id ;
 	private String url ;
@@ -41,7 +41,7 @@ public class WebPageProcessor {
 		}	
 	}
 	
-	public WebPageProcessor(String id, String url) {
+	public PageUnitProcessor(String id, String url) {
 		this.id = id;
 		this.url = url;
 	}
@@ -54,10 +54,12 @@ public class WebPageProcessor {
 		return null;
 	}
 	
+	public String getDocUrls() {
+		return null;
+	} 
+	
 	public Element getElement(List<DocPathUnit> lstUnit) {
-		
-		
-		
+				
 		return null;
 	}
 	
