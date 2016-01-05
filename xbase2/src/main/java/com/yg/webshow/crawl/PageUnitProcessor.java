@@ -18,33 +18,7 @@ public class PageUnitProcessor {
 	private String id ;
 	private String url ;
 	private Document doc ;
-	
-	public class DocPathUnit {
-		private String tagName ;
-		private int childIndex;
 		
-		public String getTagName() {
-			return tagName;
-		}
-
-		public void setTagName(String tagName) {
-			this.tagName = tagName;
-		}
-
-		public int getChildIndex() {
-			return childIndex;
-		}
-
-		public void setChildIndex(int childIndex) {
-			this.childIndex = childIndex;
-		}
-				
-		public DocPathUnit(String tagNm, int childIdx) {
-			tagName = tagNm ;
-			childIndex = childIdx ;
-		}	
-	}
-	
 	public PageUnitProcessor(String id, String url) {
 		this.id = id;
 		this.url = url;
@@ -94,17 +68,30 @@ public class PageUnitProcessor {
 	} 
 	
 	public Element getElement(List<DocPathUnit> lstUnit) {
-		
-		for(DocPathUnit docPathUtil : lstUnit) {
-			;
+		Elements elem = this.doc.select("html");
+			
+		int i = 0;
+		for(DocPathUnit path : lstUnit) {
+			if(path.getTagName() != null && path.getTagName().equals("html")) {
+				break ;
+			}
+			i ++;
 		}
-				
-		return null;
+		
+		System.out.println("i INDEX :" + i);
+		Element tmpElem = elem.get(0);
+		for(;i<lstUnit.size();i++) {
+			DocPathUnit path = lstUnit.get(i);			
+			tmpElem = tmpElem.child(path.getChildIndex());
+			
+		}
+		
+		return tmpElem;
 	}
 	
 	
 	public static void main(String ... v) {
-		String url = "http://gall.dcinside.com/board/lists/?id=stock_new1";
+		String url = "http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700455.html";
 		PageUnitProcessor test = new PageUnitProcessor(null, url);
 		try {
 			test.load();
@@ -113,6 +100,18 @@ public class PageUnitProcessor {
 			for(CrawlData crawlData : lstData) {
 				System.out.println("CrawlData >>> "+ crawlData);
 			}
+			
+			ArrayList<DocPathUnit> lstPath = new ArrayList<DocPathUnit>() ;
+			lstPath.add(new DocPathUnit("html", 1));
+			lstPath.add(new DocPathUnit("body", 3));
+			lstPath.add(new DocPathUnit("div", 2));
+			lstPath.add(new DocPathUnit("div", 1));
+			lstPath.add(new DocPathUnit("article", 1));
+			lstPath.add(new DocPathUnit("div", 20));
+			
+			Element resElem = test.getElement(lstPath);
+			
+			System.out.println("Result >" + resElem.text());
 			
 		} catch (IOException e) {
 			e.printStackTrace();
