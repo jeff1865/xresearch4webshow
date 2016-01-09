@@ -67,8 +67,7 @@ public abstract class AbstractTable {
 		table.put(put);
 		table.close();
 	}
-	
-	
+		
 	protected void put(String key, String cf, String colName, String value) throws IOException {
 		Table table = this.getTable();
 		

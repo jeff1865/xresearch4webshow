@@ -4,7 +4,9 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -91,6 +93,35 @@ public class WebDocWrapperUtil {
 		return resMap;
 	}
 	
+	/**
+	 * Sample of path : html:1/body:2/div:3/div:1
+	 * PathText must start with element 'html'
+	 * @param path path expression to find matched elements
+	 * @return
+	 */
+	public List<DocPathUnit> getPathObject(String path) {
+		ArrayList<DocPathUnit> lstPath = new ArrayList<DocPathUnit>() ;
+		
+		StringTokenizer stkz = new StringTokenizer(path, "/");
+		String token = null;
+		while(stkz.hasMoreTokens()) {
+			token = stkz.nextToken();
+			String[] tk = token.split(":");
+			
+			if(tk.length == 2) {
+				int i = DocPathUnit.ALL_INDEX;
+				try {
+					i = Integer.parseInt(tk[1]);
+				} catch(Exception e) {}
+				
+				lstPath.add(new DocPathUnit(tk[0], i));
+			} else {
+				lstPath.add(new DocPathUnit(tk[0], DocPathUnit.INVALID_INDEX)) ;
+			}
+		}
+		
+		return lstPath;
+	}
 	
 	public static void main(String ... v) {
 		System.out.println("Activate an ejection mode !!");
@@ -104,7 +135,25 @@ public class WebDocWrapperUtil {
 		
 		UrlContext urlContext = webDocUtil.getUrlContext("http://news.naver.com/main/read.nhn?oid=018&sid1=&aid=0003435915&mid=shm&cid=428288&mode=LSD&nh=20151227114901");
 		System.out.println("--->>>" + urlContext);
-
+		
+//		ArrayList<DocPathUnit> lstPath = new ArrayList<DocPathUnit>() ;
+//		lstPath.add(new DocPathUnit("html", 1));
+//		lstPath.add(new DocPathUnit("body", 3));
+//		lstPath.add(new DocPathUnit("div", 2));
+//		lstPath.add(new DocPathUnit("div", 1));
+//		lstPath.add(new DocPathUnit("article", 1));
+//		lstPath.add(new DocPathUnit("div", 19));
+//		
+//		Element resElem = test.getElement(lstPath);
+//		
+//		System.out.println("Result >" + resElem.text());
+		
+		List<DocPathUnit> pathObject = webDocUtil.getPathObject("html:1/body:3/div:2/div:1/article:1/div:19");
+		
+		
+		
+		System.out.println("RES>" + pathObject);
+		
 	}
 	
 }

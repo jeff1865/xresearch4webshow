@@ -112,11 +112,11 @@ public class EnvManager {
 		EnvManager test = new EnvManager();
 //		test.addSampleData();
 		
-		HTableDescriptor tableDesc = new HTableDescriptor(TableName.valueOf("crawl"));
+		HTableDescriptor tableDesc = new HTableDescriptor(TableName.valueOf("tmpsvcmng"));
 		HColumnDescriptor cf = new HColumnDescriptor("cr1");
-		HColumnDescriptor cf2 = new HColumnDescriptor("cr2");
+//		HColumnDescriptor cf2 = new HColumnDescriptor("cr2");
 		tableDesc.addFamily(cf);
-		tableDesc.addFamily(cf2);
+//		tableDesc.addFamily(cf2);
 		test.createNewTable(tableDesc);
 		
 		System.out.println("Successfully created .. " + System.currentTimeMillis());
