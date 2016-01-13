@@ -92,6 +92,57 @@ public class PageUnitProcessor {
 		return lstRes ;
 	}
 	
+	
+	public String getNodePath(String base, Node node, int idx) {
+		if(base == null) base = "";
+		
+		Node pNode = node.parentNode();
+		
+		String tmp = "unknown";
+		int elemIndex = -1;
+		if(node instanceof Element) {
+			Element elem = (Element)node;
+			tmp = elem.tagName();
+			
+			if(elem.parent() != null) {
+//				elemIndex = elem.parent().childNodes().indexOf(elem);
+				elemIndex = elem.parent().children().indexOf(elem);
+			}
+			
+		} else if(node instanceof DataNode) {
+			DataNode dataNode = (DataNode) node;
+			tmp = dataNode.toString();
+			
+			
+		} else if(node instanceof TextNode) {
+			TextNode textNode = (TextNode) node;
+			tmp = textNode.getWholeText();
+			
+			elemIndex = pNode.childNodes().indexOf(node);
+		}
+		
+		if(base.length() != 0)
+			base = node.nodeName() + ":" + idx + "/" + base;
+		else
+			base = node.nodeName();
+		
+		
+//		//to be removed
+//		if(node.nodeName().equals("#text")) {
+//			System.out.println("======>" + pNode + "---->" + pNode.parentNode());
+//		}
+		
+		if(node.nodeName().equalsIgnoreCase("html")) return base;
+		
+		pNode = node.parentNode();
+		if(pNode != null) {
+			base = getNodePath(base, pNode, elemIndex);
+		}
+		
+		return base;
+	}
+	
+	
 	public String getNodePath(String base, Node node) {
 		if(base == null) base = "";
 		
@@ -116,11 +167,7 @@ public class PageUnitProcessor {
 			tmp = textNode.getWholeText();
 		}
 		
-//		if(elemIndex == -1) 
-//			elemIndex = node.siblingIndex();
-		
-//		base = tmp + "[" + elemIndex + ":" + node.siblingNodes().size() + "]>" + base;
-		base = tmp + "[" + elemIndex + "]>" + base;
+		base = node.nodeName() + ":" + elemIndex + "/" + base;
 		
 		pNode = node.parentNode();
 		if(pNode != null) {
@@ -190,6 +237,7 @@ public class PageUnitProcessor {
 	
 	public static void main(String ... v) {
 		String url = "http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700455.html";
+//		url = "http://www.ppomppu.co.kr/zboard/view.php?id=climb&page=1&divpage=12&search_type=sub_memo&keyword=%B9%E9%B5%CE&no=58896";
 //		String url = "http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=43632518";
 		PageUnitProcessor test = new PageUnitProcessor(null, url);
 		try {
@@ -214,13 +262,23 @@ public class PageUnitProcessor {
 			List<DocPathUnit> pathObject = webDocUtil.getPathObject("html:1/body:3/div:2/div:1/article:1/div:19");
 					
 			Element resElem = test.getElement(pathObject);
-			System.out.println("Result >" + resElem.text());
+			System.out.println("---------- Result >" + resElem + ":" + resElem.text());
+			
+//			TX:#root:0/html:1/body:0/div:6/div:0/div:12/table:0/tbody:0/tr:0/td:0/table:0/tbody:0/tr:0/td:0/table:0/tbody:0/tr:0/td:-1/
+//			천미터급은 하신이 정말 힘들더군요. 지리산은 더하겠지만..:-8/--> 천미터급은 하신이 정말 힘들더군요. 지리산은 더하겠지만..
+			
+//	TX:#root:-1/html:0/body:1/div:0/div:6/div:0/table:12/tbody:0/tr:0/td:0/table:0/tbody:0/tr:0/td:0/table:0/tbody:0/tr:0/td:0/
+//			천미터급은 하신이 정말 힘들더군요. 지리산은 더하겠지만..:-1/--> 천미터급은 하신이 정말 힘들더군요. 지리산은 더하겠지만..
+			
+			//TX:#root:-1/html:0/body:1/div:3/div:2/article:1/div:1/div:19/제작진은 케
+//TX:unknown:-1  /#root:1/html:3/body:2/div:1/div:1/article:19/div:-1/div:-9/-->제작진은 
 			
 			List<TextNode> utNode = test.getUnlinkedTextNodes();
 			System.out.println("-------------------------------------------------");
 			
 			for(TextNode textNode : utNode) {
-				System.out.println("TX:" + textNode.text());
+				System.out.println("TXa:" + test.getNodePath(null, textNode, -9) + "-->" + textNode.text());
+//				System.out.println("TXb:" + test.getNodePath(null, textNode) + "-->" + textNode.text());
 			}
 			
 			
