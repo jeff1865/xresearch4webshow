@@ -10,7 +10,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.jsoup.nodes.DataNode;
+import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
 import org.mortbay.log.Log;
 
 public class WebDocWrapperUtil {
@@ -21,12 +24,60 @@ public class WebDocWrapperUtil {
 	
 	//TODO
 	public String getNodePathPatternExpression(Node node) {
+		
+		
+		
+		
 		return null;
 	} 
-	
-	//TODO
-	public String getNodePath(Node node) {
-		return null;
+		
+	public String getNodePath(String base, Node node, int idx) {
+		if(base == null) base = "";
+		
+		Node pNode = node.parentNode();
+		
+		String tmp = "unknown";
+		int elemIndex = -1;
+		if(node instanceof Element) {
+			Element elem = (Element)node;
+			tmp = elem.tagName();
+			
+			if(elem.parent() != null) {
+//				elemIndex = elem.parent().childNodes().indexOf(elem);
+				elemIndex = elem.parent().children().indexOf(elem);
+			}
+			
+		} else if(node instanceof DataNode) {
+			DataNode dataNode = (DataNode) node;
+			tmp = dataNode.toString();
+			
+			
+		} else if(node instanceof TextNode) {
+			TextNode textNode = (TextNode) node;
+			tmp = textNode.getWholeText();
+			
+			elemIndex = pNode.childNodes().indexOf(node);
+		}
+		
+		if(base.length() != 0)
+			base = node.nodeName() + ":" + idx + "/" + base;
+		else
+			base = node.nodeName();
+		
+		
+//		//to be removed
+//		if(node.nodeName().equals("#text")) {
+//			System.out.println("======>" + pNode + "---->" + pNode.parentNode());
+//		}
+		
+		if(node.nodeName().equalsIgnoreCase("html")) return base;
+		
+		pNode = node.parentNode();
+		if(pNode != null) {
+			base = getNodePath(base, pNode, elemIndex);
+		}
+		
+		return base;
 	}
 	
 	public String getUrlPatternExpression(String url) {
@@ -94,7 +145,7 @@ public class WebDocWrapperUtil {
 	}
 	
 	/**
-	 * Sample of path : html:1/body:2/div:3/div:1
+	 * Sample of path : html:1/body:2/div:3/div:1/div:0/#text
 	 * PathText must start with element 'html'
 	 * @param path path expression to find matched elements
 	 * @return
@@ -149,9 +200,7 @@ public class WebDocWrapperUtil {
 //		System.out.println("Result >" + resElem.text());
 		
 		List<DocPathUnit> pathObject = webDocUtil.getPathObject("html:1/body:3/div:2/div:1/article:1/div:19");
-		
-		
-		
+				
 		System.out.println("RES>" + pathObject);
 		
 	}

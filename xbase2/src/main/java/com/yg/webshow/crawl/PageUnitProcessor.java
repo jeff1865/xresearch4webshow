@@ -39,7 +39,7 @@ public class PageUnitProcessor {
 		return null;
 	}
 	
-	private static boolean isLinkedNode(Node node) {
+	private boolean isLinkedNode(Node node) {
 		
 		Node pNode = node.parent();
 		if(pNode == null) return false;
@@ -62,16 +62,12 @@ public class PageUnitProcessor {
 	
 	public List<TextNode> getUnlinkedTextNodes () {
 		ArrayList<TextNode> lstRes = new ArrayList<TextNode>();
-//		Document doc = Jsoup.connect(this.url).get();
-		doc.getAllElements();
 		Elements elem = doc.getAllElements();
 		
 		ListIterator<Element> ItlElem = elem.listIterator();
 		
 		while(ItlElem.hasNext()) {
-			;
 			Element emt = ItlElem.next();
-//			System.out.println("Element :" + emt.getClass() + "--->" + emt.tagName() + "--->" + emt.ownText());
 			
 			String data = null;
 			List<TextNode> textNodes = emt.textNodes();
@@ -82,7 +78,7 @@ public class PageUnitProcessor {
 					if(data.trim().length() > 0) {
 						if(!isLinkedNode(tn)) {
 							lstRes.add(tn);
-							System.out.println(getNodePath(null, tn) + ">>TextNode >" + tn.text() + "---" + elem.indexOf(emt));
+							System.out.println(wrapperUtil.getNodePath(null, tn, -9) + ">>TextNode >" + tn.text() + "---" + elem.indexOf(emt));
 						}
 					}
 				}
@@ -90,91 +86,6 @@ public class PageUnitProcessor {
 		}
 		
 		return lstRes ;
-	}
-	
-	
-	public String getNodePath(String base, Node node, int idx) {
-		if(base == null) base = "";
-		
-		Node pNode = node.parentNode();
-		
-		String tmp = "unknown";
-		int elemIndex = -1;
-		if(node instanceof Element) {
-			Element elem = (Element)node;
-			tmp = elem.tagName();
-			
-			if(elem.parent() != null) {
-//				elemIndex = elem.parent().childNodes().indexOf(elem);
-				elemIndex = elem.parent().children().indexOf(elem);
-			}
-			
-		} else if(node instanceof DataNode) {
-			DataNode dataNode = (DataNode) node;
-			tmp = dataNode.toString();
-			
-			
-		} else if(node instanceof TextNode) {
-			TextNode textNode = (TextNode) node;
-			tmp = textNode.getWholeText();
-			
-			elemIndex = pNode.childNodes().indexOf(node);
-		}
-		
-		if(base.length() != 0)
-			base = node.nodeName() + ":" + idx + "/" + base;
-		else
-			base = node.nodeName();
-		
-		
-//		//to be removed
-//		if(node.nodeName().equals("#text")) {
-//			System.out.println("======>" + pNode + "---->" + pNode.parentNode());
-//		}
-		
-		if(node.nodeName().equalsIgnoreCase("html")) return base;
-		
-		pNode = node.parentNode();
-		if(pNode != null) {
-			base = getNodePath(base, pNode, elemIndex);
-		}
-		
-		return base;
-	}
-	
-	
-	public String getNodePath(String base, Node node) {
-		if(base == null) base = "";
-		
-		Node pNode = node.parentNode();
-		
-		String tmp = "unknown";
-		int elemIndex = -1;
-		if(node instanceof Element) {
-			Element elem = (Element)node;
-			tmp = elem.tagName();
-			
-			if(elem.parent() != null) {
-//				elemIndex = elem.parent().childNodes().indexOf(elem);
-				elemIndex = elem.parent().children().indexOf(elem);
-			}
-			
-		} else if(node instanceof DataNode) {
-			DataNode dataNode = (DataNode) node;
-			tmp = dataNode.toString();
-		} else if(node instanceof TextNode) {
-			TextNode textNode = (TextNode) node;
-			tmp = textNode.getWholeText();
-		}
-		
-		base = node.nodeName() + ":" + elemIndex + "/" + base;
-		
-		pNode = node.parentNode();
-		if(pNode != null) {
-			base = getNodePath(base, pNode);
-		}
-		
-		return base;
 	}
 	
 	public List<CrawlData> getCrawlDataInDoc() {
@@ -223,7 +134,6 @@ public class PageUnitProcessor {
 			i ++;
 		}
 		
-		System.out.println("i INDEX :" + i);
 		Element tmpElem = elem.get(0);
 		for(;i<lstUnit.size();i++) {
 			DocPathUnit path = lstUnit.get(i);			
@@ -234,8 +144,55 @@ public class PageUnitProcessor {
 		return tmpElem;
 	}
 	
+	public Node getEndNode(String strPath) {
+		try {
+			Elements elem = this.doc.select("html");
+				
+			List<DocPathUnit> lstPathUnit = this.wrapperUtil.getPathObject(strPath);
+			
+			int i = 0;
+			for(DocPathUnit path : lstPathUnit) {
+				if(path.getTagName() != null && path.getTagName().equals("html")) {
+					break ;
+				}
+				i ++;
+			}
+			
+			Element tmpElem = elem.get(0);
+			for(;i<lstPathUnit.size();i++) {
+				DocPathUnit path = lstPathUnit.get(i);
+				if(path.getChildIndex() >= 0) {
+					if(lstPathUnit.size() - 2 == i && lstPathUnit.get(lstPathUnit.size() - 1).getChildIndex() < 0) {
+						return tmpElem.childNode(path.getChildIndex());
+					} else {
+						tmpElem = tmpElem.child(path.getChildIndex());
+					}
+				} else {
+					return null;
+				}
+			}
+		} catch(Exception e) {
+//			e.printStackTrace();
+		}
+		
+		return null;
+	}
 	
-	public static void main(String ... v) {
+	public static void main(String ...v) {
+		PageUnitProcessor test = new PageUnitProcessor(null, "http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700455.html");
+		try {
+			test.load();
+			
+			Node endNode = test.getEndNode("html:1/body:3/div:2/div:1/article:1/div:190/div:0/#text");
+			System.out.println("endNode >" + endNode);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public static void main0(String ... v) {
 		String url = "http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700455.html";
 //		url = "http://www.ppomppu.co.kr/zboard/view.php?id=climb&page=1&divpage=12&search_type=sub_memo&keyword=%B9%E9%B5%CE&no=58896";
 //		String url = "http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=43632518";
@@ -262,7 +219,7 @@ public class PageUnitProcessor {
 			List<DocPathUnit> pathObject = webDocUtil.getPathObject("html:1/body:3/div:2/div:1/article:1/div:19");
 					
 			Element resElem = test.getElement(pathObject);
-			System.out.println("---------- Result >" + resElem + ":" + resElem.text());
+			System.out.println("---------- Result >" + resElem.text());
 			
 //			TX:#root:0/html:1/body:0/div:6/div:0/div:12/table:0/tbody:0/tr:0/td:0/table:0/tbody:0/tr:0/td:0/table:0/tbody:0/tr:0/td:-1/
 //			천미터급은 하신이 정말 힘들더군요. 지리산은 더하겠지만..:-8/--> 천미터급은 하신이 정말 힘들더군요. 지리산은 더하겠지만..
@@ -277,7 +234,7 @@ public class PageUnitProcessor {
 			System.out.println("-------------------------------------------------");
 			
 			for(TextNode textNode : utNode) {
-				System.out.println("TXa:" + test.getNodePath(null, textNode, -9) + "-->" + textNode.text());
+				System.out.println("TXa:" + webDocUtil.getNodePath(null, textNode, -9) + "-->" + textNode.text());
 //				System.out.println("TXb:" + test.getNodePath(null, textNode) + "-->" + textNode.text());
 			}
 			
