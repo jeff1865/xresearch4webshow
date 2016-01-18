@@ -1,4 +1,4 @@
-package com.yg.webshow.crawl;
+package com.yg.webshow.crawl.webdoc;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -15,6 +15,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.mortbay.log.Log;
+
+import com.yg.webshow.crawl.DUrlContext;
+import com.yg.webshow.crawl.DocPathUnit;
 
 public class WebDocWrapperUtil {
 		
@@ -93,8 +96,8 @@ public class WebDocWrapperUtil {
 		return null;
 	}
 		
-	public UrlContext getUrlContext(String url) {
-		UrlContext urlContext = new UrlContext() ;
+	public DUrlContext getUrlContext(String url) {
+		DUrlContext urlContext = new DUrlContext() ;
 		
 		try {
 			URL uri = new URL(url);
@@ -184,7 +187,7 @@ public class WebDocWrapperUtil {
 //		webDocUtil.getUrlPatternExpression("http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700214.html");
 //		System.out.println("------------------------");
 		
-		UrlContext urlContext = webDocUtil.getUrlContext("http://news.naver.com/main/read.nhn?oid=018&sid1=&aid=0003435915&mid=shm&cid=428288&mode=LSD&nh=20151227114901");
+		DUrlContext urlContext = webDocUtil.getUrlContext("http://news.naver.com/main/read.nhn?oid=018&sid1=&aid=0003435915&mid=shm&cid=428288&mode=LSD&nh=20151227114901");
 		System.out.println("--->>>" + urlContext);
 		
 //		ArrayList<DocPathUnit> lstPath = new ArrayList<DocPathUnit>() ;

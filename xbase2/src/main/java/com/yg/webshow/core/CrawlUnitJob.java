@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.yg.webshow.crawl.Crawl;
-import com.yg.webshow.crawl.CrawlData;
+import com.yg.webshow.crawl.DCrawlData;
 import com.yg.webshow.data.CrawlRow;
 import com.yg.webshow.data.CrawlTable;
 import com.yg.webshow.data.EnvManager;
@@ -29,25 +29,25 @@ public class CrawlUnitJob {
 	
 	public void updateNews() {
 		NewsTable newsTable = new NewsTable(this.envManaer.getNewConnection());
-		List<CrawlData> newData = this.getNewData();
+		List<DCrawlData> newData = this.getNewData();
 		log.info("News Crawled :" + newData.size());
 		
-		for (CrawlData cd : newData) {
+		for (DCrawlData cd : newData) {
 			newsTable.insertNews(this.siteId, cd.getUrl(), cd.getAnchorText());
 		}
 		
 		newsTable.close();
 	}
 	
-	public List<CrawlData> getNewData() {
-		ArrayList<CrawlData> resData = new ArrayList<CrawlData>();
+	public List<DCrawlData> getNewData() {
+		ArrayList<DCrawlData> resData = new ArrayList<DCrawlData>();
 				
 		CrawlTable crawlTable = new CrawlTable(this.envManaer.getNewConnection());
 		Crawl crawl = new Crawl(this.seedUrl);
-		List<CrawlData> innerURL = crawl.getInnerURL();
+		List<DCrawlData> innerURL = crawl.getInnerURL();
 		
 		int i= 0;
-		for(CrawlData crawlData : innerURL) {
+		for(DCrawlData crawlData : innerURL) {
 			CrawlRow rawData = crawlTable.getRawData(this.siteId, crawlData.getUrl());
 			if(rawData == null) {
 				resData.add(crawlData);

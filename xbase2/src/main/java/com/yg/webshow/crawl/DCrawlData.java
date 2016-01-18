@@ -1,13 +1,13 @@
 package com.yg.webshow.crawl;
 
-public class CrawlData {
+public class DCrawlData {
 	
 	public String url ;
 	public String anchorText ;
 	public String imgSrc;
 	public String mediaSrc;
 	
-	public CrawlData(String url) {
+	public DCrawlData(String url) {
 		this.url = url;
 	}
 	

@@ -19,8 +19,8 @@ public class Crawl {
 		this.seedUrl = url;
 	}
 	
-	public List<CrawlData> getInnerURL() {
-		ArrayList<CrawlData> lstRetData = new ArrayList<CrawlData>();
+	public List<DCrawlData> getInnerURL() {
+		ArrayList<DCrawlData> lstRetData = new ArrayList<DCrawlData>();
 		
 		try {
 			Document doc = Jsoup.connect(this.seedUrl).get();
@@ -28,13 +28,13 @@ public class Crawl {
 			log.info("Size :" + elem.size());
 					
 			Elements links = doc.select("a[href]");
-			CrawlData crawlData = null;			
+			DCrawlData crawlData = null;			
 	        for (Element link : links) {
 //	            log.info(link.attr("abs:href") +"---"+ link.text());
 	            
 	        	if(link.attr("abs:href") == null || link.attr("abs:href").trim().length() == 0) continue;
 	        	
-	            crawlData = new CrawlData(link.attr("abs:href"));
+	            crawlData = new DCrawlData(link.attr("abs:href"));
 	            crawlData.setAnchorText(link.text());
 	            
 	            if(link.text() == null || link.text().trim().length() == 0) {
@@ -57,10 +57,10 @@ public class Crawl {
 	
 	public static void main(String ... v) {
 		Crawl test = new Crawl("http://news.naver.com/main/home.nhn");
-		List<CrawlData> innerURL = test.getInnerURL();
+		List<DCrawlData> innerURL = test.getInnerURL();
 		
 		int i = 0;
-		for(CrawlData crawlData : innerURL) {
+		for(DCrawlData crawlData : innerURL) {
 			System.out.println( i++ + ".\t" + crawlData);
 		}
 	} 

@@ -3,13 +3,13 @@ package com.yg.webshow.crawl;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class UrlContext {
+public class DUrlContext {
 	private String protocol ;
 	private String domain ;
 	private String resource ;
 	private Map<String, String> kvp ;
 	
-	public UrlContext() {
+	public DUrlContext() {
 		this.setKvp(new LinkedHashMap<String, String>());
 	}
 	

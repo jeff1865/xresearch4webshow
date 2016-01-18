@@ -7,12 +7,13 @@ import java.util.ListIterator;
 
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.DataNode;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
+
+import com.yg.webshow.crawl.webdoc.WebDocWrapperUtil;
 
 //TODO Page URL RgularExpression Changer
 //TODO Data Scheme to analyze WebPage
@@ -38,58 +39,9 @@ public class PageUnitProcessor {
 		
 		return null;
 	}
-	
-	private boolean isLinkedNode(Node node) {
 		
-		Node pNode = node.parent();
-		if(pNode == null) return false;
-		
-		if(pNode instanceof Element) {
-			Element elem = (Element) pNode;
-			if(elem.tagName().trim().equalsIgnoreCase("body")) {
-				return false;
-			}
-			
-			if(elem.tagName().trim().equalsIgnoreCase("a")) {
-				return true;
-			} 
-			
-			return isLinkedNode(pNode);		
-		} else {
-			return isLinkedNode(pNode);
-		}
-	}
-	
-	public List<TextNode> getUnlinkedTextNodes () {
-		ArrayList<TextNode> lstRes = new ArrayList<TextNode>();
-		Elements elem = doc.getAllElements();
-		
-		ListIterator<Element> ItlElem = elem.listIterator();
-		
-		while(ItlElem.hasNext()) {
-			Element emt = ItlElem.next();
-			
-			String data = null;
-			List<TextNode> textNodes = emt.textNodes();
-			
-			for(TextNode tn : textNodes) {
-				if(tn.childNodeSize() == 0) { 
-					data = tn.text();
-					if(data.trim().length() > 0) {
-						if(!isLinkedNode(tn)) {
-							lstRes.add(tn);
-							System.out.println(wrapperUtil.getNodePath(null, tn, -9) + ">>TextNode >" + tn.text() + "---" + elem.indexOf(emt));
-						}
-					}
-				}
-			}
-		}
-		
-		return lstRes ;
-	}
-	
-	public List<CrawlData> getCrawlDataInDoc() {
-		ArrayList<CrawlData> lstRetData = new ArrayList<CrawlData>();
+	public List<DCrawlData> getCrawlDataInDoc() {
+		ArrayList<DCrawlData> lstRetData = new ArrayList<DCrawlData>();
 		
 		try {
 			Document doc = Jsoup.connect(this.url).get();
@@ -97,13 +49,13 @@ public class PageUnitProcessor {
 			log.info("Size :" + elem.size());
 					
 			Elements links = doc.select("a[href]");
-			CrawlData crawlData = null;			
+			DCrawlData crawlData = null;			
 	        for (Element link : links) {
 //	            log.info(link.attr("abs:href") +"---"+ link.text());
 	            
 	        	if(link.attr("abs:href") == null || link.attr("abs:href").trim().length() == 0) continue;
 	        	
-	            crawlData = new CrawlData(link.attr("abs:href"));
+	            crawlData = new DCrawlData(link.attr("abs:href"));
 	            crawlData.setAnchorText(link.text());
 	            
 	            if(link.text() == null || link.text().trim().length() == 0) {
@@ -182,8 +134,7 @@ public class PageUnitProcessor {
 		PageUnitProcessor test = new PageUnitProcessor(null, "http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700455.html");
 		try {
 			test.load();
-			
-			Node endNode = test.getEndNode("html:1/body:3/div:2/div:1/article:1/div:190/div:0/#text");
+			Node endNode = test.getEndNode("html:1/body:3/div:2/div:1/article:1/div:19/div:0/#text");
 			System.out.println("endNode >" + endNode);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -199,44 +150,39 @@ public class PageUnitProcessor {
 		PageUnitProcessor test = new PageUnitProcessor(null, url);
 		try {
 			test.load();
-			List<CrawlData> lstData = test.getCrawlDataInDoc();
 			
-			for(CrawlData crawlData : lstData) {
-				System.out.println("CrawlData >>> "+ crawlData);
-			}
 			
-//			ArrayList<DocPathUnit> lstPath = new ArrayList<DocPathUnit>() ;
-//			lstPath.add(new DocPathUnit("html", 1));
-//			lstPath.add(new DocPathUnit("body", 3));
-//			lstPath.add(new DocPathUnit("div", 2));
-//			lstPath.add(new DocPathUnit("div", 1));
-//			lstPath.add(new DocPathUnit("article", 1));
-//			lstPath.add(new DocPathUnit("div", 19));
-//			Element resElem = test.getElement(lstPath);
-//			System.out.println("Result >" + resElem.text());
 			
-			WebDocWrapperUtil webDocUtil = new WebDocWrapperUtil();
-			List<DocPathUnit> pathObject = webDocUtil.getPathObject("html:1/body:3/div:2/div:1/article:1/div:19");
-					
-			Element resElem = test.getElement(pathObject);
-			System.out.println("---------- Result >" + resElem.text());
-			
-//			TX:#root:0/html:1/body:0/div:6/div:0/div:12/table:0/tbody:0/tr:0/td:0/table:0/tbody:0/tr:0/td:0/table:0/tbody:0/tr:0/td:-1/
-//			천미터급은 하신이 정말 힘들더군요. 지리산은 더하겠지만..:-8/--> 천미터급은 하신이 정말 힘들더군요. 지리산은 더하겠지만..
-			
-//	TX:#root:-1/html:0/body:1/div:0/div:6/div:0/table:12/tbody:0/tr:0/td:0/table:0/tbody:0/tr:0/td:0/table:0/tbody:0/tr:0/td:0/
-//			천미터급은 하신이 정말 힘들더군요. 지리산은 더하겠지만..:-1/--> 천미터급은 하신이 정말 힘들더군요. 지리산은 더하겠지만..
-			
-			//TX:#root:-1/html:0/body:1/div:3/div:2/article:1/div:1/div:19/제작진은 케
-//TX:unknown:-1  /#root:1/html:3/body:2/div:1/div:1/article:19/div:-1/div:-9/-->제작진은 
-			
-			List<TextNode> utNode = test.getUnlinkedTextNodes();
-			System.out.println("-------------------------------------------------");
-			
-			for(TextNode textNode : utNode) {
-				System.out.println("TXa:" + webDocUtil.getNodePath(null, textNode, -9) + "-->" + textNode.text());
-//				System.out.println("TXb:" + test.getNodePath(null, textNode) + "-->" + textNode.text());
-			}
+//			List<CrawlData> lstData = test.getCrawlDataInDoc();
+//			
+//			for(CrawlData crawlData : lstData) {
+//				System.out.println("CrawlData >>> "+ crawlData);
+//			}
+//			
+////			ArrayList<DocPathUnit> lstPath = new ArrayList<DocPathUnit>() ;
+////			lstPath.add(new DocPathUnit("html", 1));
+////			lstPath.add(new DocPathUnit("body", 3));
+////			lstPath.add(new DocPathUnit("div", 2));
+////			lstPath.add(new DocPathUnit("div", 1));
+////			lstPath.add(new DocPathUnit("article", 1));
+////			lstPath.add(new DocPathUnit("div", 19));
+////			Element resElem = test.getElement(lstPath);
+////			System.out.println("Result >" + resElem.text());
+//			
+//			WebDocWrapperUtil webDocUtil = new WebDocWrapperUtil();
+//			List<DocPathUnit> pathObject = webDocUtil.getPathObject("html:1/body:3/div:2/div:1/article:1/div:19");
+//					
+//			Element resElem = test.getElement(pathObject);
+//			System.out.println("---------- Result >" + resElem.text());
+//
+//			
+//			List<TextNode> utNode = test.getUnlinkedTextNodes();
+//			System.out.println("-------------------------------------------------");
+//			
+//			for(TextNode textNode : utNode) {
+//				System.out.println("TXa:" + webDocUtil.getNodePath(null, textNode, -9) + "-->" + textNode.text());
+////				System.out.println("TXb:" + test.getNodePath(null, textNode) + "-->" + textNode.text());
+//			}
 			
 			
 		} catch (IOException e) {
