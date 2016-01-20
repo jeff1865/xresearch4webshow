@@ -26,12 +26,18 @@ public class WebDocWrapperUtil {
 	}
 	
 	//TODO
-	public String getNodePathPatternExpression(Node node) {
+	public String getNodePathPatternExpression(String nodePath) {
+		List<DocPathUnit> pathObj = this.getPathObject(nodePath);
+		StringBuffer sb = new StringBuffer();
 		
-		
-		
-		
-		return null;
+		for(DocPathUnit docPath : pathObj) {
+			sb.append(docPath.getTagName()).append(":");
+			if(docPath.getChildIndex() >= 0) sb.append("*");
+			else sb.append("-");
+			sb.append("/");
+		}
+				
+		return sb.toString();
 	} 
 		
 	public String getNodePath(String base, Node node, int idx) {
@@ -206,6 +212,9 @@ public class WebDocWrapperUtil {
 				
 		System.out.println("RES>" + pathObject);
 		
+		String samplePath = "html:1/body:3/div:2/div:1/article:1/div:8/div:0/#text";
+		String nodePathPatternExpression = webDocUtil.getNodePathPatternExpression(samplePath);
+		System.out.println("-------->" + nodePathPatternExpression);
 	}
 	
 }

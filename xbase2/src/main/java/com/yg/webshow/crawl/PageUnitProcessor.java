@@ -13,6 +13,7 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
+import com.yg.webshow.crawl.webdoc.ContentAnalyzer;
 import com.yg.webshow.crawl.webdoc.WebDocWrapperUtil;
 
 //TODO Page URL RgularExpression Changer
@@ -32,7 +33,7 @@ public class PageUnitProcessor {
 	}
 	
 	public void load() throws IOException {
-		this.doc = Jsoup.connect(this.url).get();
+		this.setDoc(Jsoup.connect(this.url).get());
 	}
 	
 	public String getContentWithRule(String extRule) {
@@ -76,7 +77,7 @@ public class PageUnitProcessor {
 	} 
 	
 	public Element getElement(List<DocPathUnit> lstUnit) {
-		Elements elem = this.doc.select("html");
+		Elements elem = this.getDoc().select("html");
 			
 		int i = 0;
 		for(DocPathUnit path : lstUnit) {
@@ -98,7 +99,7 @@ public class PageUnitProcessor {
 	
 	public Node getEndNode(String strPath) {
 		try {
-			Elements elem = this.doc.select("html");
+			Elements elem = this.getDoc().select("html");
 				
 			List<DocPathUnit> lstPathUnit = this.wrapperUtil.getPathObject(strPath);
 			
@@ -130,7 +131,7 @@ public class PageUnitProcessor {
 		return null;
 	}
 	
-	public static void main(String ...v) {
+	public static void main2(String ...v) {
 		PageUnitProcessor test = new PageUnitProcessor(null, "http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700455.html");
 		try {
 			test.load();
@@ -143,19 +144,17 @@ public class PageUnitProcessor {
 	}
 	
 	
-	public static void main0(String ... v) {
+	public static void main(String ... v) {
 		String url = "http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700455.html";
 //		url = "http://www.ppomppu.co.kr/zboard/view.php?id=climb&page=1&divpage=12&search_type=sub_memo&keyword=%B9%E9%B5%CE&no=58896";
 //		String url = "http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=43632518";
 		PageUnitProcessor test = new PageUnitProcessor(null, url);
 		try {
 			test.load();
-			
-			
-			
-//			List<CrawlData> lstData = test.getCrawlDataInDoc();
+						
+//			List<DCrawlData> lstData = test.getCrawlDataInDoc();
 //			
-//			for(CrawlData crawlData : lstData) {
+//			for(DCrawlData crawlData : lstData) {
 //				System.out.println("CrawlData >>> "+ crawlData);
 //			}
 //			
@@ -169,26 +168,36 @@ public class PageUnitProcessor {
 ////			Element resElem = test.getElement(lstPath);
 ////			System.out.println("Result >" + resElem.text());
 //			
-//			WebDocWrapperUtil webDocUtil = new WebDocWrapperUtil();
-//			List<DocPathUnit> pathObject = webDocUtil.getPathObject("html:1/body:3/div:2/div:1/article:1/div:19");
-//					
-//			Element resElem = test.getElement(pathObject);
-//			System.out.println("---------- Result >" + resElem.text());
+			WebDocWrapperUtil webDocUtil = new WebDocWrapperUtil();
+			List<DocPathUnit> pathObject = webDocUtil.getPathObject("html:1/body:3/div:2/div:1/article:1/div:19");
+					
+			Element resElem = test.getElement(pathObject);
+			System.out.println("---------- Result >" + resElem.text());
 //
 //			
-//			List<TextNode> utNode = test.getUnlinkedTextNodes();
-//			System.out.println("-------------------------------------------------");
-//			
-//			for(TextNode textNode : utNode) {
-//				System.out.println("TXa:" + webDocUtil.getNodePath(null, textNode, -9) + "-->" + textNode.text());
-////				System.out.println("TXb:" + test.getNodePath(null, textNode) + "-->" + textNode.text());
-//			}
+			ContentAnalyzer test1 = new ContentAnalyzer(test.getDoc());
+			
+			List<TextNode> utNode = test1.getUnlinkedTextNodes();
+			System.out.println("-------------------------------------------------");
+			
+			for(TextNode textNode : utNode) {
+				System.out.println("TXa:" + webDocUtil.getNodePath(null, textNode, -9) + "-->" + textNode.text());
+//				System.out.println("TXb:" + test.getNodePath(null, textNode) + "-->" + textNode.text());
+			}
 			
 			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
+	}
+
+	public Document getDoc() {
+		return doc;
+	}
+
+	public void setDoc(Document doc) {
+		this.doc = doc;
 	}
 	
 }

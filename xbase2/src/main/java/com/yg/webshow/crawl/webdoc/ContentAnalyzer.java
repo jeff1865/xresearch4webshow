@@ -18,7 +18,7 @@ import org.jsoup.select.Elements;
 public class ContentAnalyzer {
 	
 	private Document doc ;
-	private WebDocWrapperUtil wrapperUtil = null;
+	private WebDocWrapperUtil wrapperUtil = new WebDocWrapperUtil();
 		
 	public ContentAnalyzer(Document doc) {
 		this.doc = doc;
