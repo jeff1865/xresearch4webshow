@@ -1,9 +1,11 @@
 package com.yg.webshow.crawl.webdoc;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
@@ -17,11 +19,21 @@ import org.jsoup.select.Elements;
  */
 public class ContentAnalyzer {
 	
-	private Document doc ;
+	private String url = null;
+	private Document doc = null;
 	private WebDocWrapperUtil wrapperUtil = new WebDocWrapperUtil();
 		
-	public ContentAnalyzer(Document doc) {
-		this.doc = doc;
+	public ContentAnalyzer(String url) {
+		this.url = url;
+	}
+	
+	public void load() throws IOException {
+		this.doc = Jsoup.connect(this.url).get();
+	}
+	
+	public String getContentPath() {
+		// based on elementPath
+		return null;
 	}
 	
 	public List<TextNode> getUnlinkedTextNodes () {
@@ -74,6 +86,21 @@ public class ContentAnalyzer {
 	}
 	
 	public static void main(String ... v) {
-		;
+		WebDocWrapperUtil webDocUtil = new WebDocWrapperUtil();
+		ContentAnalyzer test1 = new ContentAnalyzer("http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700455.html");
+		try {
+			test1.load();
+			
+			List<TextNode> utNode = test1.getUnlinkedTextNodes();
+			System.out.println("-------------------------------------------------");
+			
+			for(TextNode textNode : utNode) {
+				System.out.println("TX--->" + webDocUtil.getNodePathPatternExpression(webDocUtil.getNodePath(null, textNode, -9)) + "-->" + textNode.text());
+//				System.out.println("TXb:" + test.getNodePath(null, textNode) + "-->" + textNode.text());
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -1,18 +1,55 @@
 package com.yg.webshow.data;
 
+import java.io.IOException;
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.Connection;
+import org.apache.hadoop.hbase.client.ConnectionFactory;
 
 public class ContentFilterTable extends AbstractTable {
-
+	public static final String TN_CRAWL = "DocTemplateTemp";
+	public static final String CF_MAIN = "cr1";
+	public static final String CQ_DT_TBD = "TBD";
+		
 	public ContentFilterTable(Connection conn) {
 		super(conn);
-		// TODO Auto-generated constructor stub
 	}
-
+	
+	public boolean putSameNode(String nodePath, String value) {
+		
+		return false;
+	}
+	
 	@Override
 	protected String getTableName() {
-		// TODO Auto-generated method stub
-		return null;
+		return TN_CRAWL;
 	}
-
+	
+	public static void main(String ... v) {
+		System.out.println("Test .. " + System.currentTimeMillis());
+		
+		Connection conn = null;
+		try {
+			Configuration config = HBaseConfiguration.create();
+			config.set("hbase.master", "127.0.0.1");
+			conn = ConnectionFactory.createConnection(config);
+			
+			ContentFilterTable cfTbl = new ContentFilterTable(conn);
+			cfTbl.createTable(CF_MAIN);
+			System.out.println("Successfully table created ..");
+			cfTbl.close();
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(conn != null)
+				try {
+					conn.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+	}
+	
 }

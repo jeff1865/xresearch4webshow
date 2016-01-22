@@ -26,7 +26,7 @@ public abstract class AbstractTable {
 	public AbstractTable(Connection conn) {
 		this.conn = conn;
 	}
-	
+		
 	public void close() {
 		try {
 			this.conn.close();
