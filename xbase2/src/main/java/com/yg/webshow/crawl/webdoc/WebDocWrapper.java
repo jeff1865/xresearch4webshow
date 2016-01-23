@@ -17,22 +17,30 @@ import org.jsoup.select.Elements;
  * @author jeff.yg.kim@gmail.com
  *
  */
-public class ContentAnalyzer {
+public class WebDocWrapper {
 	
 	private String url = null;
 	private Document doc = null;
 	private WebDocWrapperUtil wrapperUtil = new WebDocWrapperUtil();
 		
-	public ContentAnalyzer(String url) {
+	public WebDocWrapper(String url) throws IOException {
 		this.url = url;
-	}
-	
-	public void load() throws IOException {
 		this.doc = Jsoup.connect(this.url).get();
 	}
-	
-	public String getContentPath() {
+		
+	public String getContentFilterRule() {
 		// based on elementPath
+		return null;
+	}
+	
+	public DWebDocMeta getDocMeta() {
+		
+		return null;
+	}
+	
+	public List<TextNode> getCleanedTextNode(List<TextNode> nodes) {
+		;	
+		
 		return null;
 	}
 	
@@ -87,10 +95,9 @@ public class ContentAnalyzer {
 	
 	public static void main(String ... v) {
 		WebDocWrapperUtil webDocUtil = new WebDocWrapperUtil();
-		ContentAnalyzer test1 = new ContentAnalyzer("http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700455.html");
+		WebDocWrapper test1 = null;
 		try {
-			test1.load();
-			
+			test1 = new WebDocWrapper("http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700455.html");
 			List<TextNode> utNode = test1.getUnlinkedTextNodes();
 			System.out.println("-------------------------------------------------");
 			

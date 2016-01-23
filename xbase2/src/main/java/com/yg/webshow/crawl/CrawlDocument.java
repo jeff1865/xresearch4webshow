@@ -13,7 +13,7 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
-import com.yg.webshow.crawl.webdoc.ContentAnalyzer;
+import com.yg.webshow.crawl.webdoc.WebDocWrapper;
 import com.yg.webshow.crawl.webdoc.WebDocWrapperUtil;
 
 //TODO Page URL RgularExpression Changer
@@ -34,27 +34,9 @@ public class CrawlDocument {
 	
 	public void load() throws IOException {
 		this.setDoc(Jsoup.connect(this.url).get());
-		this.createIndex();
 	}
 	
-	private void createIndex() {
-		List<Node> childNodes = doc.childNodes();
-		
-		int i = 0;
-		for(Node node : childNodes) {
-			System.out.println(i++ + ". --->" + node);
-		}
-		
-		
-//		Elements alElm = doc.getAllElements();
-//		
-//		System.out.println("Size -->" + alElm.size());
-//		for(Element elm : alElm) {
-//			System.out.println("Elem :" + elm);
-//		}
-	}
-	
-	public String getContentWithRule(String extRule) {
+	public String getContents(String extRule) {
 		
 		return null;
 	}
