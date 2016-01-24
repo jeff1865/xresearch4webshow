@@ -10,16 +10,32 @@ import org.apache.hadoop.hbase.client.ConnectionFactory;
 public class ContentFilterTable extends AbstractTable {
 	public static final String TN_CRAWL = "DocTemplateTemp";
 	public static final String CF_MAIN = "cr1";
+	public static final String CQ_CNT = "cnt";
 	public static final String CQ_DT_TBD = "TBD";
+	
 		
 	public ContentFilterTable(Connection conn) {
 		super(conn);
 	}
 	
-	public boolean putSameNode(String nodePath, String value) {
+	/**
+	 * Put data, if the same key doesn't exist.
+	 * Append data and increase count, if the same data dosen't exit for same key
+	 * 
+	 * 
+	 * @param urlPattern
+	 * @param nodePath
+	 * @param dataValue
+	 * @return
+	 */
+	public boolean updateNode(String urlPattern, String nodePath, String dataValue) {
 		
 		return false;
 	}
+	
+	public String getDataValue(String urlPattern, String nodePath) {
+		return null;
+	} 
 	
 	@Override
 	protected String getTableName() {

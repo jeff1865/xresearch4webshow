@@ -22,7 +22,8 @@ public class WebDocWrapper {
 	private String url = null;
 	private Document doc = null;
 	private WebDocWrapperUtil wrapperUtil = new WebDocWrapperUtil();
-		
+	
+	
 	public WebDocWrapper(String url) throws IOException {
 		this.url = url;
 		this.doc = Jsoup.connect(this.url).get();

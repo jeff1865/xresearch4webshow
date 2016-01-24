@@ -88,71 +88,7 @@ public class WebDocWrapperUtil {
 		
 		return base;
 	}
-	
-	public String getUrlPatternExpression(String url) {
-		StringTokenizer stkz = new StringTokenizer(url, "/ & = ? .");
 		
-		int i = 0;
-		String token = null;
-		while(stkz.hasMoreTokens()) {
-			token = stkz.nextToken();
-			System.out.println(i++ + ". Token -> " + token + "==>" + this.getPatternExpression(token));
-		}
-		
-		return null;
-	}
-		
-	public DUrlContext getUrlContext(String url) {
-		DUrlContext urlContext = new DUrlContext() ;
-		
-		try {
-			URL uri = new URL(url);
-			urlContext.setProtocol(uri.getProtocol());
-			urlContext.setDomain(uri.getHost());
-			urlContext.setResource(uri.getPath());
-			urlContext.setKvp(this.parseQuery(uri.getQuery()));
-					
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-			
-		return urlContext ;
-	}
-	
-	private String getPatternExpression(String token) {
-		String digitReg = "[0-9]+";
-		if(token.matches(digitReg)) {
-			return "%d[" + token.length() + "]";
-		} else if(token.matches("\\w")) {
-			return "CX";
-		} else if(token.matches("\\W")) {
-			return "UX";
-		}
-		
-		return token;
-	}
-		
-	private Map<String, String> parseQuery(String query) {
-		LinkedHashMap<String, String> resMap = new LinkedHashMap<String, String>();
-				
-		StringTokenizer stkz = new StringTokenizer(query, "&");
-		String kvp = null;
-		while(stkz.hasMoreTokens()) {
-			kvp = stkz.nextToken();
-			String[] tokens = kvp.split("=");
-			
-			if(tokens.length == 2) {
-				resMap.put(tokens[0], tokens[1]);
-			} else if(tokens.length == 1) {
-				resMap.put(tokens[0], null);
-			} else {
-				Log.info("Invalid query string :" + kvp);
-			}
-		}
-			
-		return resMap;
-	}
-	
 	/**
 	 * Sample of path : html:1/body:2/div:3/div:1/div:0/#text
 	 * PathText must start with element 'html'
@@ -193,8 +129,7 @@ public class WebDocWrapperUtil {
 //		webDocUtil.getUrlPatternExpression("http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700214.html");
 //		System.out.println("------------------------");
 		
-		DUrlContext urlContext = webDocUtil.getUrlContext("http://news.naver.com/main/read.nhn?oid=018&sid1=&aid=0003435915&mid=shm&cid=428288&mode=LSD&nh=20151227114901");
-		System.out.println("--->>>" + urlContext);
+		
 		
 //		ArrayList<DocPathUnit> lstPath = new ArrayList<DocPathUnit>() ;
 //		lstPath.add(new DocPathUnit("html", 1));
