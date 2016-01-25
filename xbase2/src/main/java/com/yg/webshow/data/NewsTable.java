@@ -40,7 +40,7 @@ public class NewsTable extends AbstractTable {
 		data.put(CQ_SITE_ID, siteId);
 		
 		try {
-			this.put(rowKey, CF_MAIN, data);
+			this.putString(rowKey, CF_MAIN, data);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

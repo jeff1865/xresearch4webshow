@@ -56,7 +56,7 @@ public abstract class AbstractTable {
 				
 	} 
 	
-	protected void put(String key, String cf, Map<String, String> values) throws IOException {
+	protected void putString(String key, String cf, Map<String, String> values) throws IOException {
 		Table table = this.getTable();
 		Put put = new Put(Bytes.toBytes(key));
 		
@@ -67,7 +67,20 @@ public abstract class AbstractTable {
 		table.put(put);
 		table.close();
 	}
+	
+	//TODO need to delete
+	protected void put(String key, String cf, Map<byte[], byte[]> values) throws IOException {
+		Table table = this.getTable();
+		Put put = new Put(Bytes.toBytes(key));
 		
+		for(byte[] cq : values.keySet()) {
+			put.addColumn(Bytes.toBytes(cf), cq, values.get(cq));
+		}
+		
+		table.put(put);
+		table.close();
+	}
+	
 	protected void put(String key, String cf, String colName, String value) throws IOException {
 		Table table = this.getTable();
 		

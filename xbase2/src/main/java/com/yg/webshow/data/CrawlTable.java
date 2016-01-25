@@ -28,7 +28,7 @@ public class CrawlTable extends AbstractTable {
 			htVal.put(CQ_ANCHOR, anchorText);
 			htVal.put(CN_DT_REG, DateUtil.getCurrent());
 			
-			this.put(siteId + "_" + url, CF_MAIN, htVal);
+			this.putString(siteId + "_" + url, CF_MAIN, htVal);
 //			this.put(siteId + "_" + url, CF_MAIN, CQ_ANCHOR, anchorText);
 		} catch (IOException e) {
 			e.printStackTrace();

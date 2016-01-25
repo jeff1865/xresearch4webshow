@@ -40,7 +40,7 @@ public class WebDocWrapper {
 	}
 	
 	public List<TextNode> getCleanedTextNode(List<TextNode> nodes) {
-		;	
+		;
 		
 		return null;
 	}
