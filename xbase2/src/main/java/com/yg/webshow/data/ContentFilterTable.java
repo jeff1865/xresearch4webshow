@@ -37,24 +37,53 @@ public class ContentFilterTable extends AbstractTable {
 	 * @return
 	 */
 	public boolean updateNode(String urlPattern, String nodePath, String dataValue) {
-		Map<String, String> values = new HashMap<String, String>();
-		values.put(CQ_DT_INIT, DateUtil.getCurrent());
-		values.put(CQ_DT_LATEST, DateUtil.getCurrent());
-//		values.put(CQ_CNT, "0");
-		values.put(CQ_VALUE, dataValue);
+//		Map<String, String> values = new HashMap<String, String>();
+//		values.put(CQ_DT_INIT, DateUtil.getCurrent());
+//		values.put(CQ_DT_LATEST, DateUtil.getCurrent());
+////		values.put(CQ_CNT, "0");
+//		values.put(CQ_VALUE, dataValue);
+//		
+//		try {
+//			this.putString(urlPattern + "::" + nodePath, CF_MAIN, values);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//			return false ;
+//		}
 		
+		
+		Map<byte[], byte[]> values = new HashMap<byte[], byte[]>();
+		values.put(Bytes.toBytes(CQ_DT_INIT), Bytes.toBytes(DateUtil.getCurrent()));
+		values.put(Bytes.toBytes(CQ_DT_LATEST), Bytes.toBytes(DateUtil.getCurrent()));
+		values.put(Bytes.toBytes(CQ_CNT), Bytes.toBytes((long)99));
+		values.put(Bytes.toBytes(CQ_VALUE), Bytes.toBytes(dataValue));
 		try {
-			this.putString(urlPattern + "::" + nodePath, CF_MAIN, values);
+			this.put(urlPattern + "::" + nodePath, CF_MAIN, values);
 		} catch (IOException e) {
 			e.printStackTrace();
-			return false ;
+			
 		}
-				
+		
 		return false;
 	}
-
-	public String getDataValue(String urlPattern, String nodePath) {
+	
+	public String getDataValue(String key) {
 		return null;
+	}
+	
+	private long increseCnt(String urlPattern, String nodePath) {
+		try {
+			long resVal = this.getTable().incrementColumnValue(
+					Bytes.toBytes(urlPattern + "::" + nodePath), 
+					Bytes.toBytes(CF_MAIN), 
+					Bytes.toBytes(CQ_CNT),
+					(long)1);
+			System.out.println("Result >>> " + resVal);
+			return resVal;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+			
+		return -1;
 	} 
 	
 	@Override
@@ -75,8 +104,11 @@ public class ContentFilterTable extends AbstractTable {
 //			cfTbl.createTable(CF_MAIN);
 //			System.out.println("Successfully table created ..");
 			
-			cfTbl.updateNode("http://a.b.com/a=d[10]&c=s[3]", "/html:1/body:4/div:2/#text", "Hello World");
-			System.out.println("Successfully data updated ..");
+//			cfTbl.updateNode("http://x.x.com/a=d[10]&c=s[3]", "/xhtml:1/xbody:4/xdiv:2/#text/xxx", "Hello xWorld");
+//			System.out.println("Successfully data updated ..");
+			
+			cfTbl.increseCnt("http://x.x.com/a=d[10]&c=s[3]", "/xhtml:1/xbody:4/xdiv:2/#text/xxx");
+			System.out.println("Successfully Increased ..");
 			
 			cfTbl.close();
 		} catch(Exception e) {
