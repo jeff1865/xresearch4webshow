@@ -37,39 +37,53 @@ public class ContentFilterTable extends AbstractTable {
 	 * @return
 	 */
 	public boolean updateNode(String urlPattern, String nodePath, String dataValue) {
-//		Map<String, String> values = new HashMap<String, String>();
-//		values.put(CQ_DT_INIT, DateUtil.getCurrent());
-//		values.put(CQ_DT_LATEST, DateUtil.getCurrent());
-////		values.put(CQ_CNT, "0");
-//		values.put(CQ_VALUE, dataValue);
-//		
-//		try {
-//			this.putString(urlPattern + "::" + nodePath, CF_MAIN, values);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			return false ;
-//		}
+		// Check if the same row(Key) exists or not
+		ContentFilterRow value = this.getDataValue(urlPattern, nodePath);
 		
-		
-		Map<byte[], byte[]> values = new HashMap<byte[], byte[]>();
-		values.put(Bytes.toBytes(CQ_DT_INIT), Bytes.toBytes(DateUtil.getCurrent()));
-		values.put(Bytes.toBytes(CQ_DT_LATEST), Bytes.toBytes(DateUtil.getCurrent()));
-		values.put(Bytes.toBytes(CQ_CNT), Bytes.toBytes((long)99));
-		values.put(Bytes.toBytes(CQ_VALUE), Bytes.toBytes(dataValue));
-		try {
-			this.put(urlPattern + "::" + nodePath, CF_MAIN, values);
-		} catch (IOException e) {
-			e.printStackTrace();
-			
+		// Put NewData
+		if(value == null) {
+			Map<byte[], byte[]> values = new HashMap<byte[], byte[]>();
+			values.put(Bytes.toBytes(CQ_DT_INIT), Bytes.toBytes(DateUtil.getCurrent()));
+			values.put(Bytes.toBytes(CQ_DT_LATEST), Bytes.toBytes(DateUtil.getCurrent()));
+			values.put(Bytes.toBytes(CQ_CNT), Bytes.toBytes((long)99));
+			values.put(Bytes.toBytes(CQ_VALUE), Bytes.toBytes(dataValue));
+			try {
+				this.put(urlPattern + "::" + nodePath, CF_MAIN, values);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {	// Update New Data
+			this.increseCnt(urlPattern, nodePath);
 		}
 		
-		return false;
+		return false;	//TODO need to change return type
 	}
 	
-	public String getDataValue(String key) {
-		return null;
+	public ContentFilterRow getDataValue(String urlPattern , String nodePath) {
+		ContentFilterRow cfRow = null ;
+		try {
+			Map<String, byte[]> resMap = this.get(urlPattern + "::" + nodePath, CF_MAIN, CQ_VALUE, CQ_CNT, CQ_DT_LATEST, CQ_DT_INIT);
+			if(resMap != null) {
+				cfRow = new ContentFilterRow() ;
+				
+				cfRow.setCnt(Bytes.toLong(resMap.get(CQ_CNT)));
+				cfRow.setValue(Bytes.toString(resMap.get(CQ_VALUE)));
+				cfRow.setInitAt(Bytes.toString(resMap.get(CQ_DT_INIT)));
+				cfRow.setLatestAt(Bytes.toString(resMap.get(CQ_DT_LATEST)));
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return cfRow;
 	}
 	
+	/**
+	 * Increase by 1 of cnt value
+	 * @param urlPattern
+	 * @param nodePath
+	 * @return
+	 */
 	private long increseCnt(String urlPattern, String nodePath) {
 		try {
 			long resVal = this.getTable().incrementColumnValue(
@@ -77,7 +91,6 @@ public class ContentFilterTable extends AbstractTable {
 					Bytes.toBytes(CF_MAIN), 
 					Bytes.toBytes(CQ_CNT),
 					(long)1);
-			System.out.println("Result >>> " + resVal);
 			return resVal;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -109,6 +122,9 @@ public class ContentFilterTable extends AbstractTable {
 			
 			cfTbl.increseCnt("http://x.x.com/a=d[10]&c=s[3]", "/xhtml:1/xbody:4/xdiv:2/#text/xxx");
 			System.out.println("Successfully Increased ..");
+			
+			ContentFilterRow dVal = cfTbl.getDataValue("http://x.x.com/a=d[10]&c=s[3]", "/xhtml:1/xbody:4/xdiv:2/#text/xxx");
+			System.out.println("Result >>> " + dVal);
 			
 			cfTbl.close();
 		} catch(Exception e) {

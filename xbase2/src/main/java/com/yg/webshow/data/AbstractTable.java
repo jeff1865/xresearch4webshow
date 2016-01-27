@@ -97,6 +97,11 @@ public abstract class AbstractTable {
 		Table table = this.getTable();
 		Get get = new Get(Bytes.toBytes(rowKey));
 		Result result = table.get(get);
+		if(result.size() <= 0) {
+			table.close();
+			return null;
+		}
+		
 		for(String colName : cols) {
 			byte[] value = result.getValue(Bytes.toBytes(cf), Bytes.toBytes(colName));
 			resTable.put(colName, value);
