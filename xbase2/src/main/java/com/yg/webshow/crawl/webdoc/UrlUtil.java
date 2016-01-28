@@ -26,7 +26,7 @@ public class UrlUtil {
 			sb.append(this.getPatternExpression(token) + ":");
 		}
 		
-		return sb.toString();
+		return sb.toString(); 
 	}
 		
 	public DUrlContext getUrlContext(String url) {
