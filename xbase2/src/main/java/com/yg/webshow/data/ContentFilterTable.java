@@ -26,6 +26,10 @@ public class ContentFilterTable extends AbstractTable {
 		super(conn);
 	}
 	
+	public ContentFilterTable() {
+		super();
+	}
+	
 	/**
 	 * Put data, if the same key doesn't exist.
 	 * Append data and increase count, if the same data dosen't exit for same key
@@ -36,7 +40,7 @@ public class ContentFilterTable extends AbstractTable {
 	 * @param dataValue
 	 * @return
 	 */
-	public boolean updateNode(String urlPattern, String nodePath, String dataValue) {
+	public long updateNode(String urlPattern, String nodePath, String dataValue) {
 		// Check if the same row(Key) exists or not
 		ContentFilterRow value = this.getDataValue(urlPattern, nodePath);
 		
@@ -52,11 +56,10 @@ public class ContentFilterTable extends AbstractTable {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			return 0;
 		} else {	// Update New Data
-			this.increseCnt(urlPattern, nodePath);
+			return this.increseCnt(urlPattern, nodePath);
 		}
-		
-		return false;	//TODO need to change return type
 	}
 	
 	public ContentFilterRow getDataValue(String urlPattern , String nodePath) {

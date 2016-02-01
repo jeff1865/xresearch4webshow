@@ -23,6 +23,11 @@ public abstract class AbstractTable {
 	
 	protected Connection conn = null;
 	
+	public AbstractTable() {
+		EnvManager envMng = new EnvManager();
+		this.conn = envMng.getNewConnection();
+	}
+	
 	public AbstractTable(Connection conn) {
 		this.conn = conn;
 	}

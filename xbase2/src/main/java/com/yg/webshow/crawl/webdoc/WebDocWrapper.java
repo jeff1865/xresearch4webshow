@@ -11,6 +11,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
+import org.mortbay.log.Log;
+
+import com.yg.webshow.data.ContentFilterTable;
 
 /**
  * ContentAnalyzer --- (SiteURL Pattern Expression) ---> Hbase
@@ -22,7 +25,8 @@ public class WebDocWrapper {
 	private String url = null;
 	private Document doc = null;
 	private WebDocWrapperUtil wrapperUtil = new WebDocWrapperUtil();
-	
+	private ContentFilterTable cfTbl = new ContentFilterTable();
+	private UrlUtil urlUtil = new UrlUtil();
 	
 	public WebDocWrapper(String url) throws IOException {
 		this.url = url;
@@ -39,10 +43,21 @@ public class WebDocWrapper {
 		return null;
 	}
 	
+	//TODO
 	public List<TextNode> getCleanedTextNode(List<TextNode> nodes) {
-		;
+		ArrayList<TextNode> lstTxNode = new ArrayList<TextNode> ();
+		long cntHit = 0;
+		for(TextNode node : nodes) {
+			cntHit = this.cfTbl.updateNode(this.urlUtil.getUrlPatternExpression(this.url),
+					this.wrapperUtil.getNodePath(null, node, -1), node.getWholeText());
+			if(cntHit == 0) {
+				lstTxNode.add(node);
+			} else {
+				Log.info("Duplicated Node :" + node.toString());
+			}
+		}
 		
-		return null;
+		return lstTxNode;
 	}
 	
 	public List<TextNode> getUnlinkedTextNodes () {
@@ -106,6 +121,11 @@ public class WebDocWrapper {
 				System.out.println("TX--->" + webDocUtil.getNodePathPatternExpression(webDocUtil.getNodePath(null, textNode, -9)) + "-->" + textNode.text());
 //				System.out.println("TXb:" + test.getNodePath(null, textNode) + "-->" + textNode.text());
 			}
+			
+			System.out.println("==================================================");
+			
+			List<TextNode> cleanedTextNode = test1.getCleanedTextNode(utNode);
+			
 			
 		} catch (IOException e) {
 			e.printStackTrace();
