@@ -49,11 +49,11 @@ public class WebDocWrapper {
 		long cntHit = 0;
 		for(TextNode node : nodes) {
 			cntHit = this.cfTbl.updateNode(this.urlUtil.getUrlPatternExpression(this.url),
-					this.wrapperUtil.getNodePath(null, node, -1), node.getWholeText());
+					this.wrapperUtil.getNodePath(node), node.getWholeText());
 			if(cntHit == 0) {
 				lstTxNode.add(node);
 			} else {
-				Log.info("Duplicated Node :" + node.toString());
+				Log.debug("Duplicated Node :" + node.toString() + " --> " + cntHit);
 			}
 		}
 		
@@ -78,7 +78,7 @@ public class WebDocWrapper {
 					if(data.trim().length() > 0) {
 						if(!isLinkedNode(tn)) {
 							lstRes.add(tn);
-							System.out.println(wrapperUtil.getNodePath(null, tn, -9) + ">>TextNode >" + tn.text() + "---" + elem.indexOf(emt));
+//							System.out.println(wrapperUtil.getNodePath(null, tn, -9) + ">>TextNode >" + tn.text() + "---" + elem.indexOf(emt));
 						}
 					}
 				}
@@ -113,19 +113,29 @@ public class WebDocWrapper {
 		WebDocWrapperUtil webDocUtil = new WebDocWrapperUtil();
 		WebDocWrapper test1 = null;
 		try {
-			test1 = new WebDocWrapper("http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700455.html");
+//			test1 = new WebDocWrapper("http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700455.html");
+//			test1 = new WebDocWrapper("http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44153110");
+//			test1 = new WebDocWrapper("http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44152976");
+			//http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44152934
+//			test1 = new WebDocWrapper("http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44152934");
+			//http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44151880&page=4
+			test1 = new WebDocWrapper("http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44151880");
 			List<TextNode> utNode = test1.getUnlinkedTextNodes();
 			System.out.println("-------------------------------------------------");
 			
 			for(TextNode textNode : utNode) {
-				System.out.println("TX--->" + webDocUtil.getNodePathPatternExpression(webDocUtil.getNodePath(null, textNode, -9)) + "-->" + textNode.text());
+				System.out.println("TX--->" + webDocUtil.getNodePathPatternExpression(webDocUtil.getNodePath(textNode)) + "-->" + textNode.text());
 //				System.out.println("TXb:" + test.getNodePath(null, textNode) + "-->" + textNode.text());
 			}
 			
-			System.out.println("==================================================");
+			System.out.println("=======================<Cleaned>===========================");
 			
-			List<TextNode> cleanedTextNode = test1.getCleanedTextNode(utNode);
+			List<TextNode> cNodes = test1.getCleanedTextNode(utNode);
+			System.out.println("======= Contents Size : " + cNodes.size());
 			
+			for(TextNode tNode : cNodes) {
+				System.out.println("Cleanded Node >> " + webDocUtil.getNodePath(tNode) + "==>" + tNode.text() + "");
+			}
 			
 		} catch (IOException e) {
 			e.printStackTrace();

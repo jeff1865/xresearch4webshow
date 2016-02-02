@@ -4,6 +4,10 @@ import java.util.List;
 
 import org.jsoup.nodes.TextNode;
 
+/**
+ * 
+ *
+ */
 public class DWebDocMeta {
 	private String title;
 	private List<TextNode> contents;

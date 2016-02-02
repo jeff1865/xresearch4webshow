@@ -22,7 +22,7 @@ public class UrlUtil {
 		String token = null;
 		while(stkz.hasMoreTokens()) {
 			token = stkz.nextToken();
-			System.out.println(i++ + ". Token -> " + token + "==>" + this.getPatternExpression(token));
+//			System.out.println(i++ + ". Token -> " + token + "==>" + this.getPatternExpression(token));
 			sb.append(this.getPatternExpression(token) + ":");
 		}
 		

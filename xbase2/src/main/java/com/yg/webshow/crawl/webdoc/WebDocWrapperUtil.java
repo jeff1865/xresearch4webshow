@@ -39,8 +39,12 @@ public class WebDocWrapperUtil {
 				
 		return sb.toString();
 	} 
-		
-	public String getNodePath(String base, Node node, int idx) {
+	
+	public String getNodePath(Node node) {
+		return this.getNodePath(null, node, -9);
+	}
+	
+	private String getNodePath(String base, Node node, int idx) {
 		if(base == null) base = "";
 		
 		Node pNode = node.parentNode();

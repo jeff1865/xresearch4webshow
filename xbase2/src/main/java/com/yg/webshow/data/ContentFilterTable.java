@@ -5,10 +5,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.ConnectionFactory;
 import org.apache.hadoop.hbase.client.Put;
+import org.apache.hadoop.hbase.client.Result;
+import org.apache.hadoop.hbase.client.ResultScanner;
+import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.util.Bytes;
 
@@ -21,13 +25,40 @@ public class ContentFilterTable extends AbstractTable {
 	public static final String CQ_DT_LATEST = "lst";
 	public static final String CQ_CNT = "cnt";
 	public static final String CQ_VALUE = "val";
-			
+	
+	public static final long CD_NEW_TEXT_NODE = 0;
+	
 	public ContentFilterTable(Connection conn) {
 		super(conn);
 	}
 	
 	public ContentFilterTable() {
 		super();
+	}
+	
+	/**
+	 * Scan & Display all data
+	 */
+	public void displayAll() {
+		ResultScanner scn = null;
+		try {
+			scn = this.getTable().getScanner(new Scan());
+			Result res = null;
+			int i = 0;
+			while((res = scn.next()) != null) {
+				try { 
+					String anchorText = Bytes.toString(res.getValue(Bytes.toBytes(CF_MAIN), Bytes.toBytes(CQ_VALUE)));
+					long hitCnt = Bytes.toLong(res.getValue(Bytes.toBytes(CF_MAIN), Bytes.toBytes(CQ_CNT)));
+					System.out.println(i++ + "\t" + hitCnt + "\t" + anchorText + " --->" + res);
+				} catch(Exception e) {
+//					e.printStackTrace();
+				}
+			}
+		} catch (IOException e) {
+//			e.printStackTrace();
+		} finally {
+			if(scn != null) scn.close();
+		}
 	}
 	
 	/**
@@ -44,21 +75,27 @@ public class ContentFilterTable extends AbstractTable {
 		// Check if the same row(Key) exists or not
 		ContentFilterRow value = this.getDataValue(urlPattern, nodePath);
 		
-		// Put NewData
+		// Put New Data
 		if(value == null) {
+			
 			Map<byte[], byte[]> values = new HashMap<byte[], byte[]>();
 			values.put(Bytes.toBytes(CQ_DT_INIT), Bytes.toBytes(DateUtil.getCurrent()));
 			values.put(Bytes.toBytes(CQ_DT_LATEST), Bytes.toBytes(DateUtil.getCurrent()));
-			values.put(Bytes.toBytes(CQ_CNT), Bytes.toBytes((long)99));
+			values.put(Bytes.toBytes(CQ_CNT), Bytes.toBytes((long)0));
 			values.put(Bytes.toBytes(CQ_VALUE), Bytes.toBytes(dataValue));
 			try {
 				this.put(urlPattern + "::" + nodePath, CF_MAIN, values);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			return 0;
-		} else {	// Update New Data
-			return this.increseCnt(urlPattern, nodePath);
+			return CD_NEW_TEXT_NODE;
+		} else {	// Update Data
+			if(value.getValue().equals(dataValue)) {
+				return this.increseCnt(urlPattern, nodePath);
+			} else {
+				// Different TextNode Exist
+				return CD_NEW_TEXT_NODE;
+			}
 		}
 	}
 	
@@ -123,11 +160,13 @@ public class ContentFilterTable extends AbstractTable {
 //			cfTbl.updateNode("http://x.x.com/a=d[10]&c=s[3]", "/xhtml:1/xbody:4/xdiv:2/#text/xxx", "Hello xWorld");
 //			System.out.println("Successfully data updated ..");
 			
-			cfTbl.increseCnt("http://x.x.com/a=d[10]&c=s[3]", "/xhtml:1/xbody:4/xdiv:2/#text/xxx");
-			System.out.println("Successfully Increased ..");
+//			cfTbl.increseCnt("http://x.x.com/a=d[10]&c=s[3]", "/xhtml:1/xbody:4/xdiv:2/#text/xxx");
+//			System.out.println("Successfully Increased ..");
+//			
+//			ContentFilterRow dVal = cfTbl.getDataValue("http://x.x.com/a=d[10]&c=s[3]", "/xhtml:1/xbody:4/xdiv:2/#text/xxx");
+//			System.out.println("Result >>> " + dVal);
 			
-			ContentFilterRow dVal = cfTbl.getDataValue("http://x.x.com/a=d[10]&c=s[3]", "/xhtml:1/xbody:4/xdiv:2/#text/xxx");
-			System.out.println("Result >>> " + dVal);
+			cfTbl.displayAll();
 			
 			cfTbl.close();
 		} catch(Exception e) {
