@@ -2,19 +2,19 @@ package com.yg.webshow.crawl.webdoc.template;
 
 import java.util.List;
 
-public class WebDocBbs extends AbstractWebDoc {
+public class WebDocBbs extends WebDoc {
 	
-	private List<?> comment ;
+	private List<DComment> comment ;
+	
+	public WebDocBbs() {
+		;
+	}
 	
 	public List<?> getComment() {
 		return comment;
 	}
 
-	public void setComment(List<?> comment) {
+	public void setComment(List<DComment> comment) {
 		this.comment = comment;
-	}
-
-	public WebDocBbs() {
-		;
 	}
 }

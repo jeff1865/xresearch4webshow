@@ -13,6 +13,7 @@ import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 import org.mortbay.log.Log;
 
+import com.yg.webshow.crawl.webdoc.template.WebDoc;
 import com.yg.webshow.data.ContentFilterTable;
 
 /**
@@ -38,7 +39,9 @@ public class WebDocWrapper {
 		return null;
 	}
 	
-	public DWebDocMeta getDocMeta() {
+	public WebDoc getDocMeta() {
+		
+		
 		
 		return null;
 	}
@@ -119,7 +122,11 @@ public class WebDocWrapper {
 			//http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44152934
 //			test1 = new WebDocWrapper("http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44152934");
 			//http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44151880&page=4
-			test1 = new WebDocWrapper("http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44151880");
+//			test1 = new WebDocWrapper("http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44151880");
+			//http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44170480
+			test1 = new WebDocWrapper("http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44170480");
+			
+			
 			List<TextNode> utNode = test1.getUnlinkedTextNodes();
 			System.out.println("-------------------------------------------------");
 			

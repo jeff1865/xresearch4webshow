@@ -13,6 +13,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 import com.yg.webshow.util.DateUtil;
 import com.yg.webshow.util.TextUtil;
 
+//TODO need to change scheme ..
 public class NewsTable extends AbstractTable {
 	public static final String TABLE_NAME = "newslist";
 	public static final String CF_MAIN = "cr1";
