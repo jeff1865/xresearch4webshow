@@ -74,12 +74,12 @@ public abstract class AbstractTable {
 	}
 	
 	//TODO need to delete
-	protected void put(String key, String cf, Map<byte[], byte[]> values) throws IOException {
+	protected void put(String key, byte[] cf, Map<byte[], byte[]> values) throws IOException {
 		Table table = this.getTable();
 		Put put = new Put(Bytes.toBytes(key));
 		
 		for(byte[] cq : values.keySet()) {
-			put.addColumn(Bytes.toBytes(cf), cq, values.get(cq));
+			put.addColumn(cf, cq, values.get(cq));
 		}
 		
 		table.put(put);

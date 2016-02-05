@@ -84,7 +84,7 @@ public class ContentFilterTable extends AbstractTable {
 			values.put(Bytes.toBytes(CQ_CNT), Bytes.toBytes((long)0));
 			values.put(Bytes.toBytes(CQ_VALUE), Bytes.toBytes(dataValue));
 			try {
-				this.put(urlPattern + "::" + nodePath, CF_MAIN, values);
+				this.put(urlPattern + "::" + nodePath, Bytes.toBytes(CF_MAIN), values);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
