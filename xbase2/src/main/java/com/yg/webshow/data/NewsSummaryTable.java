@@ -37,7 +37,7 @@ public class NewsSummaryTable extends AbstractTable {
 	}
 	
 	public List<NewsSummaryRow> getNewsSummary(String seedId, int startIndex, int offset) {
-		
+		return null;
 	}
 	
 	
