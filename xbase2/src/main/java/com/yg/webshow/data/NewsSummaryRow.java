@@ -4,6 +4,7 @@ import java.util.Map;
 
 public class NewsSummaryRow {
 	private String seedId ;
+	private long timestamp ;
 	private String anchorText ;
 	private String docTitle ;
 	private String contents ;
@@ -49,5 +50,11 @@ public class NewsSummaryRow {
 	}
 	public void setExtra(Map<String, String> extra) {
 		this.extra = extra;
+	}
+	public long getTimestamp() {
+		return timestamp;
+	}
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
 	}
 }

@@ -60,7 +60,7 @@ public abstract class AbstractTable {
 		return rs;
 				
 	} 
-	
+		
 	protected void putString(String key, String cf, Map<String, String> values) throws IOException {
 		Table table = this.getTable();
 		Put put = new Put(Bytes.toBytes(key));

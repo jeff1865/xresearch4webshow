@@ -1,10 +1,15 @@
 package com.yg.webshow.data;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.hadoop.hbase.client.Result;
+import org.apache.hadoop.hbase.client.ResultScanner;
+import org.apache.hadoop.hbase.client.Scan;
+import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.util.Bytes;
 
 /**
@@ -36,10 +41,41 @@ public class NewsSummaryTable extends AbstractTable {
 		return TBL_NAME;
 	}
 	
-	public List<NewsSummaryRow> getNewsSummary(String seedId, int startIndex, int offset) {
-		return null;
+	public List<NewsSummaryRow> getNewsSummary(String seedId, int startOffset, int nbRows) {
+		ArrayList<NewsSummaryRow> lstRes = new ArrayList<NewsSummaryRow>();
+		
+		Table table = this.getTable();
+		Scan scan = new Scan();
+		scan.setMaxResultSize(10);
+		
+		try {
+			ResultScanner rs = table.getScanner(scan);
+			Result res = null;
+			int i = 0;
+			NewsSummaryRow nsRow = null;
+			while((res = rs.next()) != null) {
+				nsRow = new NewsSummaryRow();
+				nsRow.setSeedId(seedId);
+				nsRow.setTimestamp(0);
+				nsRow.setAnchorText(Bytes.toString(res.getValue(CF_MAIN, CQ_ANCHOR_TEXT)));
+				nsRow.setDocTitle(Bytes.toString(res.getValue(CF_MAIN, CQ_DOC_TITLE)));
+				nsRow.setContents(Bytes.toString(res.getValue(CF_MAIN, CQ_CONTENTS)));
+				
+				if(nsRow.getExtra() != null && nsRow.getExtra().size() > 0) {
+					Map<String, String> extra;
+//					nsRow.setExtra(extra);
+				}
+				
+				
+				lstRes.add(nsRow);
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+			
+		return lstRes;
 	}
-	
 	
 	public String putNewData(NewsSummaryRow nsRow) {
 		String key = nsRow.getSeedId() + "_" + this.getReverseTimestamp();
@@ -80,30 +116,36 @@ public class NewsSummaryTable extends AbstractTable {
 	
 	public static void main(String ... v) {
 		NewsSummaryTable newsSum = new NewsSummaryTable();
-		NewsSummaryRow nsRow = new NewsSummaryRow();
-		nsRow.setSeedId("999999");
-		nsRow.setAnchorText("3This is a message for test!");
-		nsRow.setDocTitle("3[TITLE] The winter is comming");
-		nsRow.setContents("3ABCD 1234 @#");
-		
-		Map<String, String> extra = new HashMap<String, String>();
-		extra.put("rep1", "3This messsage is goooood !");
-		extra.put("rep2", "3ahehe1");
+//		NewsSummaryRow nsRow = new NewsSummaryRow();
+//		nsRow.setSeedId("999999");
+//		nsRow.setAnchorText("2This is a message for test!");
+//		nsRow.setDocTitle("2[TITLE] The winter is comming");
+//		nsRow.setContents("2ABCD 1234 @#");
+//		
+//		Map<String, String> extra = new HashMap<String, String>();
+//		extra.put("rep1", "2This messsage is goooood !");
+//		extra.put("rep2", "2ahehe1");
 //		extra.put("rep3", "2I am no.1 ~");
-		
-		nsRow.setExtra(extra);
-		
-		String putResKey = newsSum.putNewData(nsRow) ;
-		System.out.println("PUT Result :" + putResKey);
-		
-//		System.out.println("-->" + newsSum.getReverseTimestamp());
-//		try { Thread.sleep(1000); } catch (InterruptedException e) {}
 //		
-//		System.out.println("-->" + newsSum.getReverseTimestamp());
-//		try { Thread.sleep(1000); } catch (InterruptedException e) {}
+//		nsRow.setExtra(extra);
 //		
-//		System.out.println("-->" + newsSum.getReverseTimestamp());
-//		try { Thread.sleep(1000); } catch (InterruptedException e) {}
+//		for(int i=0;i<20;i++) {
+//			try {
+//				Thread.sleep((long)(Math.random()*200));
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//			nsRow.setAnchorText(i+ "This is a message for test!");
+//			nsRow.setDocTitle(i+ "[TITLE] The winter is comming");
+//			nsRow.setContents(i+ "2ABCD 1234 @#");
+//			
+//			String putResKey = newsSum.putNewData(nsRow) ;
+//			System.out.println("PUT Result :" + putResKey);
+//		}
+		
+		newsSum.getNewsSummary(null, 0, 0);
+		
+		newsSum.close();
 		
 //		try {
 //			newsSum.createTable(Bytes.toString(CF_MAIN));
