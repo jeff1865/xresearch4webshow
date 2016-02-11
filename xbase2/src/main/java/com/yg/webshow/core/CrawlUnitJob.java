@@ -76,7 +76,7 @@ public class CrawlUnitJob {
 	
 	public static void main(String ... v) {
 //		PageAnalyzer pageAnalyzer = new PageAnalyzer("3", "http://news.naver.com/main/home.nhn");
-		CrawlUnitJob pageAnalyzer = new CrawlUnitJob("4", "http://clien.net/cs2/bbs/board.php?bo_table=park");
+		CrawlUnitJob pageAnalyzer = new CrawlUnitJob("4", "http://news.naver.com/main/home.nhn");
 //		List<CrawlData> newData = pageAnalyzer.getNewData();
 //		
 //		System.out.println("---------- [NEWS] ----------");
@@ -85,7 +85,7 @@ public class CrawlUnitJob {
 //			System.out.println(i++ + "\t" + crawlData);
 //		}
 		
-//		pageAnalyzer.updateNews();
+		pageAnalyzer.updateNews();
 		pageAnalyzer.printNews();
 	}
 }
