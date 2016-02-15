@@ -77,13 +77,15 @@ public class CrawlUnitJob {
 	public static void main(String ... v) {
 //		PageAnalyzer pageAnalyzer = new PageAnalyzer("3", "http://news.naver.com/main/home.nhn");
 		CrawlUnitJob pageAnalyzer = new CrawlUnitJob("4", "http://news.naver.com/main/home.nhn");
-//		List<CrawlData> newData = pageAnalyzer.getNewData();
+//		List<DCrawlData> newData = pageAnalyzer.getNewData();
 //		
 //		System.out.println("---------- [NEWS] ----------");
 //		int i = 0;
-//		for(CrawlData crawlData : newData) {
+//		for(DCrawlData crawlData : newData) {
 //			System.out.println(i++ + "\t" + crawlData);
 //		}
+//		
+//		System.out.println("News Count :" + newData.size());
 		
 		pageAnalyzer.updateNews();
 		pageAnalyzer.printNews();

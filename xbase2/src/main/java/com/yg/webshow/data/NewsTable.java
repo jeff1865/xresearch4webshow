@@ -18,7 +18,7 @@ public class NewsTable extends AbstractTable {
 	public static final String TABLE_NAME = "newslist";
 	public static final String CF_MAIN = "cr1";
 	public static final String CF_SUB1 = "cr2";
-	public static final String CQ_ANCHOR = "reg";
+	public static final String CQ_ANCHOR = "anc";
 	public static final String CQ_LINK = "lnk";
 	public static final String CQ_SITE_ID = "sid";
 	

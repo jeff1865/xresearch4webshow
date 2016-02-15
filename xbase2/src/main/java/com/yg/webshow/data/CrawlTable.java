@@ -15,8 +15,13 @@ import com.yg.webshow.util.DateUtil;
 public class CrawlTable extends AbstractTable {
 	public static final String TN_CRAWL = "crawl";
 	public static final String CF_MAIN = "cr1";
-	public static final String CN_DT_REG = "reg";
+	public static final String CQ_DT_REG = "reg";
 	public static final String CQ_ANCHOR = "ac_txt";
+	public static final String CQ_STATUS = "sts";
+	
+	public static final String VAL_STATUS_INIT = "INIT";
+	public static final String VAL_STATUS_SUMMARIZED = "SUMMARIZED";
+	public static final String VAL_STATUS_FAILED = "FAILED";
 		
 	public CrawlTable(Connection conn) {
 		super(conn);
@@ -26,7 +31,8 @@ public class CrawlTable extends AbstractTable {
 		try {
 			Hashtable<String, String> htVal = new Hashtable<String, String>();
 			htVal.put(CQ_ANCHOR, anchorText);
-			htVal.put(CN_DT_REG, DateUtil.getCurrent());
+			htVal.put(CQ_DT_REG, DateUtil.getCurrent());
+			htVal.put(CQ_STATUS, VAL_STATUS_INIT);
 			
 			this.putString(siteId + "_" + url, CF_MAIN, htVal);
 //			this.put(siteId + "_" + url, CF_MAIN, CQ_ANCHOR, anchorText);
@@ -39,17 +45,17 @@ public class CrawlTable extends AbstractTable {
 		CrawlRow resRow = null;
 		
 		try {
-			Map<String, byte[]> res = this.get(siteId + "_" + url, CF_MAIN, CQ_ANCHOR, CN_DT_REG);
+			Map<String, byte[]> res = this.get(siteId + "_" + url, CF_MAIN, CQ_ANCHOR, CQ_DT_REG);
 //			System.out.println("-----" + res);;
 			
 			
-			if(res != null && res.get(CN_DT_REG) != null && res.size() > 0) {
+			if(res != null && res.get(CQ_DT_REG) != null && res.size() > 0) {
 				resRow = new CrawlRow() ;
 				resRow.setUrl(url);
 				resRow.setSiteId(siteId);
 				resRow.setKey(siteId + "_" + url);
 				resRow.setAnchor(Bytes.toString(res.get(CQ_ANCHOR)));
-				resRow.setCraetedAt(Bytes.toString(res.get(CN_DT_REG)));
+				resRow.setCraetedAt(Bytes.toString(res.get(CQ_DT_REG)));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -84,20 +90,20 @@ public class CrawlTable extends AbstractTable {
 			conn = ConnectionFactory.createConnection(config);
 			
 			CrawlTable tblCrawl = new CrawlTable(conn);
-//			tblCrawl.createTable("cr1", "cr2");
-//			System.out.println("Table Creation Success.. ");
+			tblCrawl.createTable("cr1");
+			System.out.println("Table Creation Success.. ");
 			
-			tblCrawl.insertCrawledUrl("2", "http://www.naver.com", "네이버 x NAVER" + System.currentTimeMillis());
-			System.out.println("1. Successfully Data Added ..");
-			
-			String anchorText = tblCrawl.getAchorText("1", "http://www.naver.com");
-			System.out.println("2. Anchor Text :" + anchorText);
-			
-			anchorText = tblCrawl.getAchorText("2", "http://www.naver.com");
-			System.out.println("3. Ex Anchor Text :" + anchorText);
-			
-			tblCrawl.close();
-//			table.insertCrawledUrl(siteId, url, anchorText);
+//			tblCrawl.insertCrawledUrl("2", "http://www.naver.com", "네이버 x NAVER" + System.currentTimeMillis());
+//			System.out.println("1. Successfully Data Added ..");
+//			
+//			String anchorText = tblCrawl.getAchorText("1", "http://www.naver.com");
+//			System.out.println("2. Anchor Text :" + anchorText);
+//			
+//			anchorText = tblCrawl.getAchorText("2", "http://www.naver.com");
+//			System.out.println("3. Ex Anchor Text :" + anchorText);
+//			
+//			tblCrawl.close();
+////			table.insertCrawledUrl(siteId, url, anchorText);
 			
 		} catch(Exception e) {
 			e.printStackTrace();
