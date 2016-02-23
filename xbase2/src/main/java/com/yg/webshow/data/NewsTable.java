@@ -63,9 +63,10 @@ public class NewsTable extends AbstractTable {
 				newsRow = new NewsRow() ;
 				newsRow.setSiteId(key[0]);
 				newsRow.setRegDate(key[1]);
-				
-				newsRow.setAnchorText(new String(r.getValue(Bytes.toBytes(CF_MAIN), Bytes.toBytes(CQ_ANCHOR))));
-				newsRow.setLink(new String(r.getValue(Bytes.toBytes(CF_MAIN), Bytes.toBytes(CQ_LINK))));
+				if(r.getValue(Bytes.toBytes(CF_MAIN), Bytes.toBytes(CQ_ANCHOR)) != null)
+					newsRow.setAnchorText(new String(r.getValue(Bytes.toBytes(CF_MAIN), Bytes.toBytes(CQ_ANCHOR))));
+				if(r.getValue(Bytes.toBytes(CF_MAIN), Bytes.toBytes(CQ_LINK)) != null)
+					newsRow.setLink(new String(r.getValue(Bytes.toBytes(CF_MAIN), Bytes.toBytes(CQ_LINK))));
 				
 				lstNewsRow.add(newsRow);
 			}
