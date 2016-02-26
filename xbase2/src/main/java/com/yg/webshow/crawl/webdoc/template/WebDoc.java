@@ -13,6 +13,13 @@ public class WebDoc {
 	protected Date docDate ;
 	protected List<String> meta ;
 	
+	public String toString() {
+		StringBuffer sb = new StringBuffer() ;
+		sb.append("docTitle:").append(this.docTitle).append("|");
+		sb.append("contents:").append(this.contentsText);
+		return sb.toString();
+	}
+	
 	public String getDocTitle() {
 		return docTitle;
 	}

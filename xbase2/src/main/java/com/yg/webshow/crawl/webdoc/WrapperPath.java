@@ -3,6 +3,9 @@ package com.yg.webshow.crawl.webdoc;
 import java.util.List;
 
 public class WrapperPath {
+	private final String VALUE_TYPE_TEXT = "text";
+	private final String VALUE_TYPE_TIMESTAMP = "timestamp";
+	
 	private String title;
 	private List<String> contents;
 	private String docDate ;
@@ -33,4 +36,11 @@ public class WrapperPath {
 		this.reply = reply;
 	}
 	
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append(this.title).append("|").append(this.contents).append("|")
+		.append(this.docDate).append("|").append(this.reply);
+		
+		return sb.toString();
+	}
 }

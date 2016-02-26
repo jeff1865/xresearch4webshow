@@ -131,7 +131,7 @@ public class CrawlDocument {
 		return null;
 	}
 	
-	public static void main2(String ...v) {
+	public static void main(String ...v) {
 		CrawlDocument test = new CrawlDocument(null, "http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700455.html");
 		try {
 			test.load();
@@ -144,7 +144,7 @@ public class CrawlDocument {
 	}
 	
 	
-	public static void main(String ... v) {
+	public static void main0(String ... v) {
 		String url = "http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700455.html";
 //		url = "http://www.ppomppu.co.kr/zboard/view.php?id=climb&page=1&divpage=12&search_type=sub_memo&keyword=%B9%E9%B5%CE&no=58896";
 //		String url = "http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=43632518";
