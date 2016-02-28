@@ -133,12 +133,12 @@ public class WebDocAnalyzer {
 			
 			
 			List<TextNode> utNode = test1.getUnlinkedTextNodes();
-//			System.out.println("-------------------------------------------------");
-//			
-//			for(TextNode textNode : utNode) {
+			System.out.println("-------------------------------------------------");
+			
+			for(TextNode textNode : utNode) {
 //				System.out.println("TX--->" + webDocUtil.getNodePathPatternExpression(webDocUtil.getNodePath(textNode)) + "-->" + textNode.text());
-////				System.out.println("TXb:" + test.getNodePath(null, textNode) + "-->" + textNode.text());
-//			}
+				System.out.println("TXb:" + webDocUtil.getNodePath(textNode) + "-->" + textNode.text());
+			}
 			
 			System.out.println("=======================<Cleaned>===========================");
 			

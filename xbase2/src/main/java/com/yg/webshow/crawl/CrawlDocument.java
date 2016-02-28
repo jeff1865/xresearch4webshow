@@ -173,11 +173,11 @@ public class CrawlDocument {
 			
 			
 			
-//			WebDocWrapperUtil webDocUtil = new WebDocWrapperUtil();
-//			List<DocPathUnit> pathObject = webDocUtil.getPathObject("html:1/body:3/div:2/div:1/article:1/div:19");
-//					
-//			Element resElem = test.getElement(pathObject);
-//			System.out.println("---------- Result >" + resElem.text());
+			WebDocWrapperUtil webDocUtil = new WebDocWrapperUtil();
+			List<DocPathUnit> pathObject = webDocUtil.getPathObject("html:1/body:3/div:2/div:1/article:1/div:19");
+					
+			Element resElem = test.getElement(pathObject);
+			System.out.println("---------- Result >" + resElem.text());
 	
 			
 			
