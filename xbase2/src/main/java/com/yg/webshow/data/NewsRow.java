@@ -8,6 +8,7 @@ public class NewsRow implements IRow {
 	private String imgUrl ;
 	private String summary ;
 	private String filteredContents ;
+	private String status ;
 	
 	public NewsRow() {
 		;
@@ -17,6 +18,7 @@ public class NewsRow implements IRow {
 		StringBuffer sbResult = new StringBuffer() ;
 		sbResult.append(this.siteId).append("|");
 		sbResult.append(this.regDate).append("|");
+		sbResult.append(this.status).append("|");
 		sbResult.append(this.anchorText).append("|");
 		sbResult.append(this.link).append("|");
 		sbResult.append(this.imgUrl).append("|");
@@ -80,6 +82,14 @@ public class NewsRow implements IRow {
 
 	public void setFilteredContents(String filteredContents) {
 		this.filteredContents = filteredContents;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 }

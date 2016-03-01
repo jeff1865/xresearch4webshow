@@ -23,7 +23,7 @@ public abstract class AbstractTable {
 	
 	protected Connection conn = null;
 	
-	public AbstractTable() {
+	protected AbstractTable() {
 		EnvManager envMng = new EnvManager();
 		this.conn = envMng.getNewConnection();
 	}

@@ -21,6 +21,12 @@ public class NewsTable extends AbstractTable {
 	public static final String CQ_ANCHOR = "anc";
 	public static final String CQ_LINK = "lnk";
 	public static final String CQ_SITE_ID = "sid";
+	public static final String CQ_NEWS_STATUS = "sts";
+	
+	public static final String VAL_NEWS_STATUS_INIT = "init";
+	public static final String VAL_NEWS_STATUS_RT_COMPLETED = "completed";
+	public static final String VAL_NEWS_STATUS_MR_COMPLETED = "mrCompleted";
+	public static final String VAL_NEWS_STATUS_ERROR = "error";
 	
 	/*
 	 * Key = [siteid]_[timestamp] | 
@@ -39,6 +45,7 @@ public class NewsTable extends AbstractTable {
 		data.put(CQ_ANCHOR, anchor);
 		data.put(CQ_LINK, url);
 		data.put(CQ_SITE_ID, siteId);
+		data.put(CQ_NEWS_STATUS, VAL_NEWS_STATUS_INIT);
 		
 		try {
 			this.putString(rowKey, CF_MAIN, data);
