@@ -22,14 +22,20 @@ public class DateUtil {
 		return strDate ;
 	}
 	
+	public static String getReverseTimestamp() {
+		return Long.toString(Long.MAX_VALUE - System.currentTimeMillis());
+	}
 	
 	public static void main(String ... v) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd.HHmmss.SSS");
-		Date curDate = new Date();
+//		SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd.HHmmss.SSS");
+//		Date curDate = new Date();
+//		
+//		String strDate = sdf.format(curDate);
+//		System.out.println("Date >" + strDate);
+//		
+//		System.out.println(getCurrentTsKey());
 		
-		String strDate = sdf.format(curDate);
-		System.out.println("Date >" + strDate);
+		System.out.println("Reversed timestamp >" + getReverseTimestamp());
 		
-		System.out.println(getCurrentTsKey());
 	}
 }

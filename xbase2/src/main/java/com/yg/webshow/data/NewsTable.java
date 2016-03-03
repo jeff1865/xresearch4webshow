@@ -8,6 +8,10 @@ import java.util.List;
 import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
+import org.apache.hadoop.hbase.filter.CompareFilter;
+import org.apache.hadoop.hbase.filter.Filter;
+import org.apache.hadoop.hbase.filter.FilterList;
+import org.apache.hadoop.hbase.filter.SingleColumnValueFilter;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import com.yg.webshow.util.DateUtil;
@@ -31,6 +35,9 @@ public class NewsTable extends AbstractTable {
 	/*
 	 * Key = [siteid]_[timestamp] | 
 	 */
+	public NewsTable() {
+		super();
+	}
 	
 	public NewsTable(Connection conn) {
 		super(conn);
@@ -38,7 +45,7 @@ public class NewsTable extends AbstractTable {
 	
 	public void insertNews(String siteId, String url, String anchor) {
 		String fSiteId = TextUtil.getFixedLengthText(siteId);
-		String tsKey = DateUtil.getCurrentTsKey();
+		String tsKey = DateUtil.getReverseTimestamp() ;
 		String rowKey = fSiteId + "_" + tsKey;
 		
 		Hashtable<String, String> data = new Hashtable<String, String>();
@@ -59,7 +66,7 @@ public class NewsTable extends AbstractTable {
 		
 		ResultScanner scanData = null;
 		try {
-			scanData = this.scanData(start, end);
+			scanData = this.scanData(start, end, null);
 			NewsRow newsRow = null;
 			int i = 0;
 			for(Result r : scanData) {
@@ -87,6 +94,45 @@ public class NewsTable extends AbstractTable {
 		return lstNewsRow ;
 	}
 	
+	public List<NewsRow> getLatestNews(int seedId, int maxCount) {
+		ArrayList<NewsRow> lstNewsRow = new ArrayList<NewsRow> ();
+		
+		ResultScanner scanData = null;
+		try {
+			Filter filterStsInit = new SingleColumnValueFilter(Bytes.toBytes(CF_MAIN),
+					Bytes.toBytes(CQ_NEWS_STATUS), 
+					CompareFilter.CompareOp.EQUAL, 
+					Bytes.toBytes(VAL_NEWS_STATUS_INIT));
+			
+			scanData = this.scanData(TextUtil.getFixedLengthText(String.valueOf(seedId)), 
+					TextUtil.getFixedLengthText(String.valueOf(seedId+1)), new FilterList(filterStsInit));
+			
+			NewsRow newsRow = null;
+			int i = 0;
+			for(Result r : scanData) {
+				if(++i > maxCount) break;
+				String rowKey = new String(r.getRow());
+				String[] key = rowKey.split("_");
+				
+				newsRow = new NewsRow() ;
+				newsRow.setSiteId(key[0]);
+				newsRow.setRegDate(key[1]);
+				if(r.getValue(Bytes.toBytes(CF_MAIN), Bytes.toBytes(CQ_ANCHOR)) != null)
+					newsRow.setAnchorText(new String(r.getValue(Bytes.toBytes(CF_MAIN), Bytes.toBytes(CQ_ANCHOR))));
+				if(r.getValue(Bytes.toBytes(CF_MAIN), Bytes.toBytes(CQ_LINK)) != null)
+					newsRow.setLink(new String(r.getValue(Bytes.toBytes(CF_MAIN), Bytes.toBytes(CQ_LINK))));
+				
+				lstNewsRow.add(newsRow);
+			}
+						
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			scanData.close();
+		}
+		return lstNewsRow;
+	} 
+	
 //	@Deprecated
 //	public void testScan() {
 //		try {
@@ -108,6 +154,28 @@ public class NewsTable extends AbstractTable {
 	@Override
 	protected String getTableName() {
 		return TABLE_NAME;
+	}
+	
+	public static void main(String ... v) {
+		System.out.println("Print News");
+		
+		NewsTable newsTable = new NewsTable();
+		
+//		try {
+//			newsTable.createTable("cr1", "cr2");
+//			System.out.println("NewsTable is successfully created ..");
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+		
+		
+//		List<NewsRow> news = newsTable.getNews(10, "0000005", "0000006");
+		
+		List<NewsRow> news = newsTable.getLatestNews(5, 10);
+		int i = 0;
+		for(NewsRow newsRow : news) {
+			System.out.println(i++ + "\t" + newsRow);
+		}
 	}
 	
 }
