@@ -66,7 +66,7 @@ public class NewsTable extends AbstractTable {
 		
 		ResultScanner scanData = null;
 		try {
-			scanData = this.scanData(start, end, null);
+			scanData = this.scanData(start, end, null, 0);
 			NewsRow newsRow = null;
 			int i = 0;
 			for(Result r : scanData) {
@@ -105,12 +105,14 @@ public class NewsTable extends AbstractTable {
 					Bytes.toBytes(VAL_NEWS_STATUS_INIT));
 			
 			scanData = this.scanData(TextUtil.getFixedLengthText(String.valueOf(seedId)), 
-					TextUtil.getFixedLengthText(String.valueOf(seedId+1)), new FilterList(filterStsInit));
+					TextUtil.getFixedLengthText(String.valueOf(seedId+1)), 
+					new FilterList(filterStsInit), 
+					maxCount);
 			
 			NewsRow newsRow = null;
-			int i = 0;
+//			int i = 0;
 			for(Result r : scanData) {
-				if(++i > maxCount) break;
+//				if(++i > maxCount) break;
 				String rowKey = new String(r.getRow());
 				String[] key = rowKey.split("_");
 				
@@ -171,7 +173,7 @@ public class NewsTable extends AbstractTable {
 		
 //		List<NewsRow> news = newsTable.getNews(10, "0000005", "0000006");
 		
-		List<NewsRow> news = newsTable.getLatestNews(5, 10);
+		List<NewsRow> news = newsTable.getLatestNews(5, 20);
 		int i = 0;
 		for(NewsRow newsRow : news) {
 			System.out.println(i++ + "\t" + newsRow);

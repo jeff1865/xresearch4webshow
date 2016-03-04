@@ -2,6 +2,8 @@ package com.yg.webshow.core.realtime;
 
 public class RtCrawlJobMain {
 	
+	
+	
 	public RtCrawlJobMain() {
 		;
 	}

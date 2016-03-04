@@ -17,6 +17,7 @@ import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.filter.Filter;
 import org.apache.hadoop.hbase.filter.FilterList;
+import org.apache.hadoop.hbase.filter.PageFilter;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
 
@@ -52,11 +53,20 @@ public abstract class AbstractTable {
 		
 	}
 		
-	protected ResultScanner scanData(String start, String end, FilterList filter) throws IOException {
+	protected ResultScanner scanData(String start, String end, FilterList filter, long maxResultSize) throws IOException {
 		Table table = this.getTable();
 		
 		Scan scan = new Scan(Bytes.toBytes(start), Bytes.toBytes(end));
+		
+		if(maxResultSize > 0) {
+			PageFilter pageFilter = new PageFilter(maxResultSize);
+			if(filter == null) {
+				filter = new FilterList();
+			}
+			filter.addFilter(pageFilter);
+		}
 		if(filter != null) scan.setFilter(filter);
+		
 		ResultScanner rs = table.getScanner(scan);
 		
 		table.close();
