@@ -131,6 +131,7 @@ public class WebDocAnalyzer {
 			//http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44170480
 			test1 = new WebDocAnalyzer("http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44170480");
 			
+			test1 = new WebDocAnalyzer("http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44841793");
 			
 			List<TextNode> utNode = test1.getUnlinkedTextNodes();
 			System.out.println("---------------------<UnLinked>----------------------------");

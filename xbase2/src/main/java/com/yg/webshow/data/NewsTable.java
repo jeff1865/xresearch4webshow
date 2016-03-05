@@ -173,7 +173,7 @@ public class NewsTable extends AbstractTable {
 		
 //		List<NewsRow> news = newsTable.getNews(10, "0000005", "0000006");
 		
-		List<NewsRow> news = newsTable.getLatestNews(5, 20);
+		List<NewsRow> news = newsTable.getLatestNews(5, 2);
 		int i = 0;
 		for(NewsRow newsRow : news) {
 			System.out.println(i++ + "\t" + newsRow);

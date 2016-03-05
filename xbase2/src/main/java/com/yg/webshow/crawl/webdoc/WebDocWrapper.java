@@ -167,6 +167,7 @@ public class WebDocWrapper<T extends WebDoc> {
 	public static void main(String ... v) {
 		String url = "http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44170480";
 		url = "http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44713594";
+		url = "http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44841793";
 		
 //		url = "http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700455.html";
 		
