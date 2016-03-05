@@ -189,7 +189,7 @@ public class WebDocWrapper<T extends WebDoc> {
 			
 			System.out.println("Result :" + wrappedNodes.size());
 			for(Node node : wrappedNodes) {
-				System.out.println("Filtered :" + node);
+				System.out.println("Filtered :" + node + " ---> " + node.nodeName());
 			}
 			
 			
