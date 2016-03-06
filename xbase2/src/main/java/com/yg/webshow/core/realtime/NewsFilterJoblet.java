@@ -1,9 +1,13 @@
 package com.yg.webshow.core.realtime;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.jsoup.nodes.Node;
 
+import com.yg.webshow.crawl.webdoc.WebDocWrapper;
+import com.yg.webshow.crawl.webdoc.template.WebDocBbs;
 import com.yg.webshow.data.NewsRow;
 import com.yg.webshow.data.NewsTable;
 
@@ -29,8 +33,33 @@ public class NewsFilterJoblet implements Joblet {
 		int i = 0;
 		for(NewsRow newsRow : latestNews) {
 			log.info(i++ + "-->" + newsRow.toString());
+			if(newsRow.getLink() != null) {
+				try {
+					WebDocWrapper<WebDocBbs> wrapper = new WebDocWrapper<WebDocBbs>(newsRow.getLink());
+					this.displayContents(wrapper);
+					
+				} catch (IOException e) {
+//					e.printStackTrace();
+					log.info("Invalid I/O status :" + e.getMessage());
+				}
+			}
 		}
 		return -1;
+	}
+	
+	private void displayContents(WebDocWrapper<WebDocBbs> wrapper) {
+		//TODO need to change code (getting filter/wrap rule from Hbase)
+		String wPath = "html:1/body:8/div:0/div:0/div:2/div:3/div:2/div:1/div:0/span:*/#text";
+		List<Node> wrappedNodes = wrapper.getWrappedNodes(wPath);
+		
+		log.info("Node Size :" + wrappedNodes.size());
+		StringBuffer sb = new StringBuffer();
+		for(Node node : wrappedNodes) {
+//			System.out.println("Filtered :" + node + " ---> " + node.nodeName());
+			sb.append(node.toString()).append("\n");
+		}
+		
+		log.info("Contents(Filtered) :" + sb.toString());
 	}
 	
 	@Override

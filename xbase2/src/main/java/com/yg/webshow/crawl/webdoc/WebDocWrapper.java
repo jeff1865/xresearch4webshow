@@ -39,11 +39,7 @@ public class WebDocWrapper<T extends WebDoc> {
 	public WebDocWrapper(Document doc) {
 		this.doc = doc;
 	}
-	
-	public WebDoc getDocumentMeta() {
-		return null;
-	}
-	
+		
 	private Node getEndNode(List<DocPathUnit> lstPathUnit) {
 		try {
 			Elements elem = this.doc.select("html");
@@ -126,7 +122,7 @@ public class WebDocWrapper<T extends WebDoc> {
 			
 			int wrapIdx = -1;
 			for(DocPathUnit dPath : lstPathUnit) {
-				System.out.println("-->" + dPath);
+//				System.out.println("-->" + dPath);
 				if(dPath.getChildIndex() == DocPathUnit.ALL_INDEX) {
 					wrapIdx = lstPathUnit.indexOf(dPath);
 					break;
@@ -140,12 +136,25 @@ public class WebDocWrapper<T extends WebDoc> {
 					break ;
 				}
 				
-				if(!endNode.toString().trim().startsWith("<")) {
-					lstNode.add(endNode);
+				String strNd = endNode.toString().trim();
+				if(!strNd.startsWith("<")) {
+					if(strNd.length() > 0) lstNode.add(endNode);
+				} else {
+//					System.out.println("Invalid -->" + endNode);
+					while(endNode.childNodeSize() > 0) {
+//						lstNode.add(endNode.childNode(0));
+						endNode = endNode.childNode(0);
+					}
+					
+					if(endNode instanceof TextNode)
+						lstNode.add(endNode);
+//					else 
+//						Log.info("Invalid Node :" + endNode);
+					
 				}
 			}
 		} catch(Exception e) {
-//			e.printStackTrace();
+			e.printStackTrace();
 		}
 		
 		return lstNode;
