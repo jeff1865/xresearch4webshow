@@ -33,7 +33,8 @@ public class WebDocWrapperUtil {
 		for(DocPathUnit docPath : pathObj) {
 			sb.append(docPath.getTagName()).append(":");
 			if(docPath.getChildIndex() >= 0) sb.append("*");
-			else sb.append("-");
+//			else sb.append("-");
+			else sb.append("*");
 			sb.append("/");
 		}
 				

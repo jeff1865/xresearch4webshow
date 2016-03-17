@@ -35,7 +35,7 @@ public class WebDocWrapper<T extends WebDoc> {
 		this.url = url;
 		this.doc = Jsoup.connect(this.url).get();
 	}
-	
+		
 	public WebDocWrapper(Document doc) {
 		this.doc = doc;
 	}
@@ -112,6 +112,34 @@ public class WebDocWrapper<T extends WebDoc> {
 	public List<Node> getGroupWrappedNode(int grpInedx, List<String> lstWrapPath) {
 		
 		return null;
+	}
+	
+	public List<Node> getBlurWrappedNode(String wrapPath) {
+		ArrayList<Node> resNodes = new ArrayList<Node>();
+		
+		System.out.println("Patterned >" + this.wrapperUtil.getNodePathPatternExpression(wrapPath));
+		String qryPath = this.wrapperUtil.getNodePathPatternExpression(wrapPath);
+		if(qryPath.endsWith("#text:*/")) {
+			qryPath = qryPath.substring(0, qryPath.length() - "#text:*/".length());
+		}
+		System.out.println("Revised Query :" + qryPath);
+		
+		WebDocAnalyzer wda = new WebDocAnalyzer(this.doc) ;
+		List<TextNode> utNodes = wda.getUnlinkedTextNodes();
+		
+		String nodePath = null, pPath = null;
+		for(TextNode node : utNodes) {
+			nodePath = this.wrapperUtil.getNodePath(node);
+//			System.out.println("Unlinked Node Path >>> " + nodePath);
+			pPath = this.wrapperUtil.getNodePathPatternExpression(nodePath);
+//			System.out.println("Patterned Node Path >>> " + pPath + "---" + qryPath);
+			if(pPath.contains(qryPath)) {
+				System.out.println("Matched Node :" + nodePath);
+				resNodes.add(node);
+			}
+		}
+				
+		return resNodes;
 	}
 	
 	public List<Node> getWrappedNodes(String wrapPath) {
@@ -194,13 +222,19 @@ public class WebDocWrapper<T extends WebDoc> {
 			
 
 			String wPath = "html:1/body:8/div:0/div:0/div:2/div:3/div:2/div:1/div:0/span:*/#text";
-			List<Node> wrappedNodes = wrapper.getWrappedNodes(wPath);
+//			List<Node> wrappedNodes = wrapper.getWrappedNodes(wPath);
+//			
+//			System.out.println("Result :" + wrappedNodes.size());
+//			for(Node node : wrappedNodes) {
+//				System.out.println("Filtered :" + node + " ---> " + node.nodeName());
+//			}
 			
-			System.out.println("Result :" + wrappedNodes.size());
-			for(Node node : wrappedNodes) {
+			
+			List<Node> blurWrappedNode = wrapper.getBlurWrappedNode(wPath);
+			System.out.println("----------- Result :" + blurWrappedNode.size());
+			for(Node node : blurWrappedNode) {
 				System.out.println("Filtered :" + node + " ---> " + node.nodeName());
 			}
-			
 			
 		} catch (IOException e) {
 			e.printStackTrace();

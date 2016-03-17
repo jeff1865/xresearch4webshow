@@ -19,7 +19,7 @@ import com.yg.webshow.data.PageTemplateTable;
 
 /**
  * Extract the rule to filter contents of webdoc
- * @author 1002000
+ * @author jeff.yg.kim@gmail.com
  *
  */
 public class WebDocAnalyzer {
@@ -34,6 +34,10 @@ public class WebDocAnalyzer {
 	public WebDocAnalyzer(String url) throws IOException {
 		this.url = url;
 		this.doc = Jsoup.connect(this.url).get();
+	}
+	
+	public WebDocAnalyzer(Document doc) {
+		this.doc = doc;
 	}
 	
 	public Object getExtRule() {
@@ -129,26 +133,29 @@ public class WebDocAnalyzer {
 			//http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44151880&page=4
 //			test1 = new WebDocWrapper("http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44151880");
 			//http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44170480
-			test1 = new WebDocAnalyzer("http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44170480");
 			
-			test1 = new WebDocAnalyzer("http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44841793");
 			
+//			test1 = new WebDocAnalyzer("http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44170480");
+//			test1 = new WebDocAnalyzer("http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44841793");
+			
+			test1 = new WebDocAnalyzer("http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44914777");
+			//http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44914777
 			List<TextNode> utNode = test1.getUnlinkedTextNodes();
 			System.out.println("---------------------<UnLinked>----------------------------");
 			
 			for(TextNode textNode : utNode) {
-//				System.out.println("TX--->" + webDocUtil.getNodePathPatternExpression(webDocUtil.getNodePath(textNode)) + "-->" + textNode.text());
+				System.out.println("TX--->" + webDocUtil.getNodePathPatternExpression(webDocUtil.getNodePath(textNode)) + "-->" + textNode.text());
 				System.out.println("TXb:" + webDocUtil.getNodePath(textNode) + "-->" + textNode.text());
 			}
 			
-			System.out.println("=======================<Cleaned>===========================");
-			
-			List<TextNode> cNodes = test1.getCleanedTextNode(utNode);
-			System.out.println("======= Contents Size : " + cNodes.size());
-			
-			for(TextNode tNode : cNodes) {
-				System.out.println("Cleanded Node >> " + webDocUtil.getNodePath(tNode) + "==>" + tNode.text() + "");
-			}
+//			System.out.println("=======================<Cleaned>===========================");
+//			
+//			List<TextNode> cNodes = test1.getCleanedTextNode(utNode);
+//			System.out.println("======= Contents Size : " + cNodes.size());
+//			
+//			for(TextNode tNode : cNodes) {
+//				System.out.println("Cleanded Node >> " + webDocUtil.getNodePath(tNode) + "==>" + tNode.text() + "");
+//			}
 			
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -76,7 +76,7 @@ public class CrawlJoblet implements Joblet {
 	}
 	
 	@Override
-	public boolean start() {
+	public boolean start() { 
 		log.info("[Joblet] Crawl & Init News ..");
 		List<DCrawlData> newData = this.getNewData();
 		log.info("News Count :" + newData.size());
