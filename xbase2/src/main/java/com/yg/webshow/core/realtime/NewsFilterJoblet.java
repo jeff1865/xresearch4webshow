@@ -53,6 +53,11 @@ public class NewsFilterJoblet implements Joblet {
 		List<Node> wrappedNodes = wrapper.getWrappedNodes(wPath);
 		
 		log.info("Node Size :" + wrappedNodes.size());
+		if(wrappedNodes.size() == 0) {
+			wrappedNodes = wrapper.getBlurWrappedNode(wPath);
+			log.info("---> Blurred Node Size :" + wrappedNodes.size());
+		}
+				
 		StringBuffer sb = new StringBuffer();
 		for(Node node : wrappedNodes) {
 //			System.out.println("Filtered :" + node + " ---> " + node.nodeName());
