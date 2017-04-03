@@ -24,12 +24,17 @@ public class NewsSummaryTable extends AbstractTable {
 	public static final String TBL_NAME = "newsSummary";
 	public static final byte[] CF_MAIN = Bytes.toBytes("cr1");
 	
+	public static final byte[] CQ_CRAWL_STATE = Bytes.toBytes("c_st");
+	public static final byte[] CQ_DOC_NO = Bytes.toBytes("d_no");
 	public static final byte[] CQ_ANCHOR_TEXT = Bytes.toBytes("a_tx");
 	public static final byte[] CQ_REG_AT = Bytes.toBytes("reg");
 	public static final byte[] CQ_DOC_TITLE = Bytes.toBytes("d_tl");
 	public static final byte[] CQ_CONTENTS = Bytes.toBytes("cont");
 	public static final byte[] CQ_REPL_CNT = Bytes.toBytes("rcnt");
-	public static final String CQ_REPL_START = "rpl_";
+	public static final byte[] CQ_MEDIA_CNT = Bytes.toBytes("mcnt");
+	
+	public static final String CQ_REPL_PREFIX = "rpl_";
+	public static final String CQ_MEDIA_URL_PREFIX = "m_";
 	
 	public NewsSummaryTable() {
 		super();
@@ -92,7 +97,7 @@ public class NewsSummaryTable extends AbstractTable {
 				
 				int i = 0;
 				for(String exKey : mapExtra.keySet()) {
-					colums.put(Bytes.toBytes(CQ_REPL_START + i++), Bytes.toBytes(mapExtra.get(exKey)));
+					colums.put(Bytes.toBytes(CQ_REPL_PREFIX + i++), Bytes.toBytes(mapExtra.get(exKey)));
 				}
 			} else {
 				colums.put(CQ_REPL_CNT, Bytes.toBytes((int)1));

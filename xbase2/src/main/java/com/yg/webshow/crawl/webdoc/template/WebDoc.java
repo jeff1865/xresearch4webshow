@@ -15,7 +15,7 @@ public class WebDoc {
 	
 	public String toString() {
 		StringBuffer sb = new StringBuffer() ;
-		sb.append("docTitle:").append(this.docTitle).append("|");
+		sb.append("conTitle:").append(this.contTitle).append("|");
 		sb.append("contents:").append(this.contentsText);
 		return sb.toString();
 	}

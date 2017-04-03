@@ -124,6 +124,10 @@ public class WebDocWrapperUtil {
 		return lstPath;
 	}
 	
+	public Node getEndNode(Node baseNode, String offsetPath) {
+		return null ;
+	}
+	
 	public static void main(String ... v) {
 		System.out.println("Activate an ejection mode !!");
 				

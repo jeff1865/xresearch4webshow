@@ -4,6 +4,7 @@ import java.util.Map;
 
 public class NewsSummaryRow {
 	private String seedId ;
+	private String docNo;
 	private long timestamp ;
 	private String anchorText ;
 	private String docTitle ;
@@ -56,5 +57,13 @@ public class NewsSummaryRow {
 	}
 	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
+	}
+
+	public String getDocNo() {
+		return docNo;
+	}
+
+	public void setDocNo(String docNo) {
+		this.docNo = docNo;
 	}
 }

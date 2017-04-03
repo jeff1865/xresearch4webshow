@@ -2,6 +2,7 @@ package com.yg.webshow.crawl.webdoc;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -25,10 +26,10 @@ import com.yg.webshow.data.PageTemplateTable;
 public class WebDocAnalyzer {
 	
 	private String url = null;
-	private PageTemplateTable pageTemplateTable = null;
+//	private PageTemplateTable pageTemplateTable = null;
 	private Document doc = null;
 	private WebDocWrapperUtil wrapperUtil = new WebDocWrapperUtil();
-	private ContentFilterTable cfTbl = new ContentFilterTable();
+//	private ContentFilterTable cfTbl = new ContentFilterTable();
 	private UrlUtil urlUtil = new UrlUtil();
 	
 	public WebDocAnalyzer(String url) throws IOException {
@@ -55,22 +56,22 @@ public class WebDocAnalyzer {
 		return null;
 	}
 	
-	//TODO
-	public List<TextNode> getCleanedTextNode(List<TextNode> nodes) {
-		ArrayList<TextNode> lstTxNode = new ArrayList<TextNode> ();
-		long cntHit = 0;
-		for(TextNode node : nodes) {
-			cntHit = this.cfTbl.updateNode(this.urlUtil.getUrlPatternExpression(this.url),
-					this.wrapperUtil.getNodePath(node), node.getWholeText());
-			if(cntHit == 0) {
-				lstTxNode.add(node);
-			} else {
-				Log.debug("Duplicated Node :" + node.toString() + " --> " + cntHit);
-			}
-		}
-		
-		return lstTxNode;
-	}
+	//TODO need to move upper layer package
+//	public List<TextNode> getCleanedTextNode(List<TextNode> nodes) {
+//		ArrayList<TextNode> lstTxNode = new ArrayList<TextNode> ();
+//		long cntHit = 0;
+//		for(TextNode node : nodes) {
+//			cntHit = this.cfTbl.updateNode(this.urlUtil.getUrlPatternExpression(this.url),
+//					this.wrapperUtil.getNodePath(node), node.getWholeText());
+//			if(cntHit == 0) {
+//				lstTxNode.add(node);
+//			} else {
+//				Log.debug("Duplicated Node :" + node.toString() + " --> " + cntHit);
+//			}
+//		}
+//		
+//		return lstTxNode;
+//	}
 	
 	public List<TextNode> getUnlinkedTextNodes () {
 		ArrayList<TextNode> lstRes = new ArrayList<TextNode>();
@@ -98,6 +99,31 @@ public class WebDocAnalyzer {
 		}
 		
 		return lstRes ;
+	}
+	
+	public List<TextNode> getAllTextNode() {
+		ArrayList<TextNode> lstTextNode = new ArrayList<TextNode>() ;
+		
+		Elements allElem = this.doc.getAllElements();
+		Iterator<Element> itlElem = allElem.iterator();
+		
+		while(itlElem.hasNext()) {
+			Element emt = itlElem.next();
+			
+			String data = null;
+			List<TextNode> textNodes = emt.textNodes();
+			
+			for(TextNode tn : textNodes) {
+				if(tn.childNodeSize() == 0) { 
+					data = tn.text();
+					if(data.trim().length() > 0) {
+						lstTextNode.add(tn);
+					}
+				}
+			}
+		}
+		
+		return lstTextNode ;
 	}
 	
 	private boolean isLinkedNode(Node node) {
@@ -138,14 +164,20 @@ public class WebDocAnalyzer {
 //			test1 = new WebDocAnalyzer("http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44170480");
 //			test1 = new WebDocAnalyzer("http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44841793");
 			
-			test1 = new WebDocAnalyzer("http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44914777");
+//			test1 = new WebDocAnalyzer("http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44914777");
+			String url = "http://gall.dcinside.com/board/view/?id=stock_new2&no=884661&page=1";
+			test1 = new WebDocAnalyzer(url);
 			//http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44914777
-			List<TextNode> utNode = test1.getUnlinkedTextNodes();
+//			List<TextNode> utNode = test1.getUnlinkedTextNodes();
+			List<TextNode> utNode = test1.getAllTextNode();
 			System.out.println("---------------------<UnLinked>----------------------------");
 			
 			for(TextNode textNode : utNode) {
-				System.out.println("TX--->" + webDocUtil.getNodePathPatternExpression(webDocUtil.getNodePath(textNode)) + "-->" + textNode.text());
-				System.out.println("TXb:" + webDocUtil.getNodePath(textNode) + "-->" + textNode.text());
+//				System.out.println("TX--->" + webDocUtil.getNodePathPatternExpression(webDocUtil.getNodePath(textNode)) + "-->" + textNode.text());
+//				System.out.println("TXb:" + webDocUtil.getNodePath(textNode) + "-->" + textNode.text());
+				
+				System.out.println("NODE --> " + textNode.text() + " ==> " + textNode.getTokenIndex() + 
+						"\t\t\t\t\t\t" + webDocUtil.getNodePath(textNode));
 			}
 			
 //			System.out.println("=======================<Cleaned>===========================");

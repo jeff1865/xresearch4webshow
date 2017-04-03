@@ -2,6 +2,7 @@ package com.yg.webshow.crawl.webdoc;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -28,7 +29,7 @@ public class WebDocWrapper<T extends WebDoc> {
 	private String url = null;
 	private Document doc = null;
 	private WebDocWrapperUtil wrapperUtil = new WebDocWrapperUtil();
-	private ContentFilterTable cfTbl = new ContentFilterTable();
+//	private ContentFilterTable cfTbl = new ContentFilterTable();
 	private UrlUtil urlUtil = new UrlUtil();
 	
 	public WebDocWrapper(String url) throws IOException {
@@ -43,9 +44,6 @@ public class WebDocWrapper<T extends WebDoc> {
 	private Node getEndNode(List<DocPathUnit> lstPathUnit) {
 		try {
 			Elements elem = this.doc.select("html");
-				
-//			List<DocPathUnit> lstPathUnit = this.wrapperUtil.getPathObject(strPath);
-			
 			int i = 0;
 			for(DocPathUnit path : lstPathUnit) {
 				if(path.getTagName() != null && path.getTagName().equals("html")) {
@@ -57,6 +55,7 @@ public class WebDocWrapper<T extends WebDoc> {
 			Element tmpElem = elem.get(0);
 			for(;i<lstPathUnit.size();i++) {
 				DocPathUnit path = lstPathUnit.get(i);
+				System.out.println("PU >>> " + path);
 				if(path.getChildIndex() >= 0) {
 					if(lstPathUnit.size() - 2 == i && lstPathUnit.get(lstPathUnit.size() - 1).getChildIndex() < 0) {
 						return tmpElem.childNode(path.getChildIndex());
@@ -64,14 +63,41 @@ public class WebDocWrapper<T extends WebDoc> {
 						tmpElem = tmpElem.child(path.getChildIndex());
 					}
 				} else {
+					System.out.println("LPU>>" + path);
 					return null;
 				}
 			}
 		} catch(Exception e) {
-//			e.printStackTrace();
+			e.printStackTrace();
 		}
 		
 		return null;
+	}
+	
+	public Element getEndElement(String strPath) {
+		List<DocPathUnit> lstPathUnit = this.wrapperUtil.getPathObject(strPath);
+		Element tmpElem = null ;
+		try {
+			Elements elem = this.doc.select("html");
+			int i = 0;
+			for(DocPathUnit path : lstPathUnit) {
+				if(path.getTagName() != null && path.getTagName().equals("html")) {
+					break ;
+				}
+				i ++;
+			}
+			
+			tmpElem = elem.get(0);
+			for(;i<lstPathUnit.size()-1;i++) {
+				DocPathUnit path = lstPathUnit.get(i);
+				
+				tmpElem = tmpElem.child(path.getChildIndex());
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+				
+		return tmpElem;
 	}
 	
 	//TODO need to remove the duplicated code
@@ -142,6 +168,37 @@ public class WebDocWrapper<T extends WebDoc> {
 		return resNodes;
 	}
 	
+	public List<Node> getAllElements(String wrapPath) {
+		ArrayList<Node> lstNode = new ArrayList<Node>();
+		try {
+//			Elements elem = this.doc.select("html");
+			List<DocPathUnit> lstPathUnit = this.wrapperUtil.getPathObject(wrapPath);
+			
+//			int wrapIdx = -1;
+//			for(DocPathUnit dPath : lstPathUnit) {
+//				System.out.println("-->" + dPath);
+//				if(dPath.getChildIndex() == DocPathUnit.ALL_INDEX) {
+//					wrapIdx = lstPathUnit.indexOf(dPath);
+//					break;
+//				}
+//			}
+			DocPathUnit endPathUnit = lstPathUnit.get(lstPathUnit.size() -1);
+			
+			lstPathUnit.remove(lstPathUnit.size() - 1);
+			
+			for(DocPathUnit pu : lstPathUnit) {
+				System.out.println("--->" + pu);
+			}
+			
+			Node endNode = this.getEndNode(lstPathUnit);
+			System.out.println("ParentNode:" + endNode);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return lstNode;
+	}
+	
 	public List<Node> getWrappedNodes(String wrapPath) {
 		ArrayList<Node> lstNode = new ArrayList<Node>();
 		try {
@@ -150,13 +207,15 @@ public class WebDocWrapper<T extends WebDoc> {
 			
 			int wrapIdx = -1;
 			for(DocPathUnit dPath : lstPathUnit) {
-//				System.out.println("-->" + dPath);
+				System.out.println("-->" + dPath);
 				if(dPath.getChildIndex() == DocPathUnit.ALL_INDEX) {
 					wrapIdx = lstPathUnit.indexOf(dPath);
 					break;
 				}
 			}
-						
+			
+			System.out.println("Path last Index :" + wrapIdx);
+			
 			for(int i=0;i<1000;i++) {
 				lstPathUnit.get(wrapIdx).setChildIndex(i);
 				Node endNode = this.getEndNode(lstPathUnit);
@@ -201,10 +260,49 @@ public class WebDocWrapper<T extends WebDoc> {
 		return null;
 	}
 	
+	public List<Element> getImgs() {
+		ArrayList<Element> lstElement = new ArrayList<Element>();
+		
+		Elements media = doc.select("[src]");
+		
+		for (Element src : media) {
+            if (src.tagName().equals("img")){
+            	lstElement.add(src);
+            } 
+        }
+		
+		return lstElement ;
+	}
+	
+	public List<TextNode> getAllTextNode() {
+		ArrayList<TextNode> lstTextNode = new ArrayList<TextNode>() ;
+		
+		Elements allElem = this.doc.getAllElements();
+		Iterator<Element> itlElem = allElem.iterator();
+		
+		while(itlElem.hasNext()) {
+			Element emt = itlElem.next();
+			
+			String data = null;
+			List<TextNode> textNodes = emt.textNodes();
+			
+			for(TextNode tn : textNodes) {
+				if(tn.childNodeSize() == 0) { 
+					data = tn.text();
+					if(data.trim().length() > 0) {
+						lstTextNode.add(tn);
+					}
+				}
+			}
+		}
+		
+		return lstTextNode ;
+	}
+	
 	public static void main(String ... v) {
 		String url = "http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44170480";
 		url = "http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44713594";
-		url = "http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44841793";
+//		url = "http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=53458800";
 		
 //		url = "http://news.chosun.com/site/data/html_dir/2015/12/27/2015122700455.html";
 		
@@ -228,12 +326,27 @@ public class WebDocWrapper<T extends WebDoc> {
 //			for(Node node : wrappedNodes) {
 //				System.out.println("Filtered :" + node + " ---> " + node.nodeName());
 //			}
+			String wPathTitle = "html:1/body:8/div:0/div:0/div:2/div:3/div:1/div:0/div:0/h4:0/span:1/#text";
+			
+//			List<Node> titleNode = wrapper.getWrappedNodes(wPathTitle);
+//			System.out.println("Title .....");
+//			for(Node node : titleNode) {
+//				System.out.println("Data -->" + node.toString());
+//			}
+			System.out.println("title --> " + wrapper.getEndNode(wPathTitle));
 			
 			
 			List<Node> blurWrappedNode = wrapper.getBlurWrappedNode(wPath);
 			System.out.println("----------- Result :" + blurWrappedNode.size());
 			for(Node node : blurWrappedNode) {
-				System.out.println("Filtered :" + node + " ---> " + node.nodeName());
+				System.out.println("Filtered :" + node + " ---> " + node.nodeName() + " ==> " + node.getTokenIndex());
+			}
+			
+			List<Element> imgs = wrapper.getImgs();
+			
+			System.out.println("Result IMGS ..");
+			for(Element elemImg : imgs) {
+				System.out.println("[IMG] " + elemImg.attr("abs:src") + " ==> " + elemImg.getTokenIndex());
 			}
 			
 		} catch (IOException e) {
