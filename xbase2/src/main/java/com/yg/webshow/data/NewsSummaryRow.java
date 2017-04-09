@@ -1,5 +1,7 @@
 package com.yg.webshow.data;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class NewsSummaryRow {
@@ -9,7 +11,12 @@ public class NewsSummaryRow {
 	private String anchorText ;
 	private String docTitle ;
 	private String contents ;
+	private List<String> mediaUrls ;
 	private Map<String, String> extra ;
+	
+	public NewsSummaryRow() {
+		;
+	}
 	
 	public String toString() {
 		StringBuilder sbRet = new StringBuilder() ;
@@ -65,5 +72,16 @@ public class NewsSummaryRow {
 
 	public void setDocNo(String docNo) {
 		this.docNo = docNo;
+	}
+
+	public List<String> getMediaUrls() {
+		if(this.mediaUrls == null) {
+			this.mediaUrls = new ArrayList<String>();
+		}
+		return mediaUrls;
+	}
+
+	public void setMediaUrls(List<String> mediaUrls) {
+		this.mediaUrls = mediaUrls;
 	}
 }

@@ -15,6 +15,8 @@ import com.yg.webshow.crawl.webdoc.WebDocWrapper;
 import com.yg.webshow.crawl.webdoc.WebDocWrapperUtil;
 import com.yg.webshow.crawl.webdoc.template.DbbsTitleLine;
 import com.yg.webshow.crawl.webdoc.template.WebDocBbs;
+import com.yg.webshow.data.NewsSummaryRow;
+import com.yg.webshow.data.NewsSummaryTable;
 
 public class DcinsideBbsArticle {
 	
@@ -74,6 +76,7 @@ public class DcinsideBbsArticle {
 			Node titleNode = wrapper.getEndNode(pathTitle);
 			System.out.println("TITLE> :" + titleNode.toString().trim());
 			webDocBbs.setContTitle(titleNode.toString().trim());
+			webDocBbs.setDocTitle(titleNode.toString().trim());
 			
 			//BODY
 			String pathBody = "html:1/body:3/div:2/div:1/div:0/div:21/div:0/div:0/div:2/table:0/tbody:0/tr:0/td:5/div:0/#text";
@@ -232,21 +235,39 @@ public class DcinsideBbsArticle {
 	//tr:3/td#text
 	
 	public static void main(String ... v) {
+		String seedId = "10000";
+		
 //		showAllNode();
 //		bbsList();
 		System.out.println("---------------------------");
 //		extBbsListLines();
 		List<DbbsTitleLine> bbsTitles = getBbsTitles();
-		
+		NewsSummaryTable nsTbl = new NewsSummaryTable();
 		int i = 0;
 		for(DbbsTitleLine line : bbsTitles) {
 			System.out.println(i++ + " -> " + line);
 			if(i<5) {
 //				extContents(line.getUrl());
-				System.out.println("FILTERED_CONTENT>" + getContents(line.getUrl()));
+//				System.out.println("FILTERED_CONTENT>" + getContents(line.getUrl()));
+				
+				WebDocBbs bbsCon = getContents(line.getUrl());
+				
+				NewsSummaryRow nsRow = new NewsSummaryRow();
+				nsRow.setDocNo(String.valueOf(line.getNo()));
+				nsRow.setAnchorText(line.getTitle());
+				nsRow.setContents(bbsCon.getContentsText());
+				nsRow.setSeedId(seedId);
+				nsRow.setDocTitle(bbsCon.getDocTitle());
+				if(bbsCon.getImgUrl() != null) {
+					nsRow.setMediaUrls(bbsCon.getImgUrl());
+				}
+				
+				System.out.println("Insert Row ->" + bbsCon);
+				nsTbl.putNewData(nsRow);
 			}
 		}
 		
+		nsTbl.close();
 		System.out.println("===========================");
 		
 //		extContents();

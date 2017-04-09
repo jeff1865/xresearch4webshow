@@ -13,8 +13,7 @@ import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.util.Bytes;
 
 /**
- * RowKey design : [site_id]_[inversed_timestamp]
- * Column needed : [anchor_text] [url] [regitered_at] [doc_title] [contents] [r_cnt] [rep_n]
+ * Column needed : [anchor_text] [url] [regitered_at] [doc_title] [contents] [r_cnt] [rep_n] [doc_no] 
  * 
  * @author jeff.yg.kim@gmail.com
  *
@@ -32,9 +31,10 @@ public class NewsSummaryTable extends AbstractTable {
 	public static final byte[] CQ_CONTENTS = Bytes.toBytes("cont");
 	public static final byte[] CQ_REPL_CNT = Bytes.toBytes("rcnt");
 	public static final byte[] CQ_MEDIA_CNT = Bytes.toBytes("mcnt");
+		
 	
 	public static final String CQ_REPL_PREFIX = "rpl_";
-	public static final String CQ_MEDIA_URL_PREFIX = "m_";
+	public static final String CQ_MEDIA_URL_PREFIX = "md_";
 	
 	public NewsSummaryTable() {
 		super();
@@ -83,13 +83,23 @@ public class NewsSummaryTable extends AbstractTable {
 	}
 	
 	public String putNewData(NewsSummaryRow nsRow) {
-		String key = nsRow.getSeedId() + "_" + this.getReverseTimestamp();
+//		String key = nsRow.getSeedId() + "_" + this.getReverseTimestamp();
+		String key = this.createKey(nsRow.getSeedId(), nsRow.getTimestamp(), nsRow.getDocNo());
 		
 		Map<byte[], byte[]> colums = new HashMap<byte[], byte[]>();
 		try {
 			colums.put(CQ_ANCHOR_TEXT, Bytes.toBytes(nsRow.getAnchorText()));
 			colums.put(CQ_DOC_TITLE, Bytes.toBytes(nsRow.getDocTitle()));
 			colums.put(CQ_CONTENTS, Bytes.toBytes(nsRow.getContents()));
+			colums.put(CQ_DOC_NO, Bytes.toBytes(nsRow.getDocNo()));
+			
+			if(nsRow.getMediaUrls() != null) {
+				colums.put(CQ_MEDIA_CNT, Bytes.toBytes(nsRow.getMediaUrls().size()));
+				int i = 0;
+				for(String mUrl : nsRow.getMediaUrls()) {
+					colums.put(Bytes.toBytes(CQ_MEDIA_URL_PREFIX + "_" + i++), Bytes.toBytes(mUrl));
+				}
+			}
 			
 			if(nsRow.getExtra() != null) {
 				Map<String, String> mapExtra = nsRow.getExtra();
@@ -109,6 +119,21 @@ public class NewsSummaryTable extends AbstractTable {
 		}
 		
 		return key;
+	}
+	
+	public String createKey(String siteId, long timeSt, String docNo) {
+		StringBuffer sb = new StringBuffer(); 
+		sb.append(siteId);
+		sb.append("_");
+		sb.append(this.getReverseTimestamp(timeSt));
+		sb.append("_");
+		sb.append(docNo);
+				
+		return sb.toString() ;
+	}
+	
+	public String getReverseTimestamp(long ts) {
+		return Long.toString(Long.MAX_VALUE - ts);
 	}
 	
 	/**
