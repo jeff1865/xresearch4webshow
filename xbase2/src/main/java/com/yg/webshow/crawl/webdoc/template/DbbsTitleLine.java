@@ -1,9 +1,9 @@
 package com.yg.webshow.crawl.webdoc.template;
 
 public class DbbsTitleLine {
-	private int no;
+	private String no;
 	private String title ;
-	private String userName ;
+	private String author ;
 	private String date ;
 	private int hit ;
 	private String url ;
@@ -12,7 +12,7 @@ public class DbbsTitleLine {
 		StringBuffer sb = new StringBuffer();
 		sb.append(no).append("\t");
 		sb.append(title).append("\t");
-		sb.append(userName).append("\t");
+		sb.append(author).append("\t");
 		sb.append(date).append("\t");
 		sb.append(hit).append("\t");
 		sb.append(url);
@@ -20,10 +20,10 @@ public class DbbsTitleLine {
 		return sb.toString();
 	}
 	
-	public int getNo() {
+	public String getNo() {
 		return no;
 	}
-	public void setNo(int no) {
+	public void setNo(String no) {
 		this.no = no;
 	}
 	public String getTitle() {
@@ -32,11 +32,11 @@ public class DbbsTitleLine {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public String getUserName() {
-		return userName;
+	public String getAuthor() {
+		return author;
 	}
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setAuthor(String author) {
+		this.author = author;
 	}
 	public String getDate() {
 		return date;

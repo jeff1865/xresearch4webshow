@@ -165,7 +165,7 @@ public class WebDocAnalyzer {
 //			test1 = new WebDocAnalyzer("http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44841793");
 			
 //			test1 = new WebDocAnalyzer("http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44914777");
-			String url = "http://gall.dcinside.com/board/view/?id=stock_new2&no=884661&page=1";
+			String url = "http://gall.dcinside.com/board/view/?id=stock_new2&no=1371139&page=1";
 			test1 = new WebDocAnalyzer(url);
 			//http://clien.net/cs2/bbs/board.php?bo_table=park&wr_id=44914777
 //			List<TextNode> utNode = test1.getUnlinkedTextNodes();

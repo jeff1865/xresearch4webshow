@@ -168,6 +168,34 @@ public class WebDocWrapper<T extends WebDoc> {
 		return resNodes;
 	}
 	
+	public List<Node> getBlurWrappedNode(String wrapPath, boolean fixedRange) {
+		ArrayList<Node> resNodes = new ArrayList<Node>();
+		
+//		System.out.println("Patterned >" + this.wrapperUtil.getNodePathPatternExpression(wrapPath));
+		String qryPath = this.wrapperUtil.getNodePathPatternExpression(wrapPath);
+		if(qryPath.endsWith("#text:*/")) {
+			qryPath = qryPath.substring(0, qryPath.length() - "#text:*/".length());
+		}
+//		System.out.println("Revised Query :" + qryPath);
+		
+		WebDocAnalyzer wda = new WebDocAnalyzer(this.doc) ;
+		List<TextNode> utNodes = wda.getUnlinkedTextNodes();
+		
+		String nodePath = null, pPath = null;
+		for(TextNode node : utNodes) {
+			nodePath = this.wrapperUtil.getNodePath(node);
+//			System.out.println("Unlinked Node Path >>> " + nodePath);
+			pPath = this.wrapperUtil.getNodePathPatternExpression(nodePath);
+//			System.out.println("Patterned Node Path >>> " + pPath + "---" + qryPath);
+			if(pPath.contains(qryPath)) {
+//				System.out.println("Matched Node :" + nodePath);
+				resNodes.add(node);
+			}
+		}
+				
+		return resNodes;
+	}
+	
 	public List<Node> getAllElements(String wrapPath) {
 		ArrayList<Node> lstNode = new ArrayList<Node>();
 		try {

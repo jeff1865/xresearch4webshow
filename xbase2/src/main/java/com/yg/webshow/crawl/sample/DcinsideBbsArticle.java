@@ -68,6 +68,7 @@ public class DcinsideBbsArticle {
 	}
 	
 	public static WebDocBbs getContents(String url) {
+		WebDocWrapperUtil webDocUtil = new WebDocWrapperUtil();
 		WebDocBbs webDocBbs = new WebDocBbs();
 		try {
 			WebDocWrapper<WebDocBbs> wrapper = new WebDocWrapper<WebDocBbs>(url);
@@ -81,11 +82,14 @@ public class DcinsideBbsArticle {
 			//BODY
 			String pathBody = "html:1/body:3/div:2/div:1/div:0/div:21/div:0/div:0/div:2/table:0/tbody:0/tr:0/td:5/div:0/#text";
 			pathBody = "html:1/body:3/div:2/div:1/div:0/div:21/div:0/div:0/div:2/table:0/tbody:0/tr:0/td:5";
+			pathBody = "html:1/body:3/div:2/div:1/div:0/div:21/div:0/div:0/div:2/table:0/tbody:0/tr:0/td:0/#text";
+			//html:1/body:3/div:2/div:1/div:0/div:21/div:0/div:0/div:2/table:0/tbody:0/tr:0/td:0/#text
 			StringBuffer sb = new StringBuffer();
 			List<Node> bodyNode = wrapper.getBlurWrappedNode(pathBody);
 			for(Node bNode : bodyNode) {
 				sb.append(bNode.toString().trim()).append("\n");
-//				System.out.println("BODY> :" + bNode.toString().trim());
+				System.out.println("BODY> :" + bNode.toString().trim());
+				System.out.println("PATH> :" + webDocUtil.getNodePath(bNode));
 			}
 			webDocBbs.setContentsText(sb.toString());
 			
@@ -206,12 +210,12 @@ public class DcinsideBbsArticle {
 					Elements sub = chd.children();
 					
 //					System.out.println("links :" + links.size());
-					dtl.setNo(Integer.parseInt(sub.get(0).text()));
+					dtl.setNo(sub.get(0).text());
 					dtl.setTitle(sub.get(1).text());
 					Elements links = sub.get(1).select("a[href]");
 //					System.out.println("lni");
 					dtl.setUrl(links.get(0).attr("abs:href"));
-					dtl.setUserName(sub.get(2).text());
+					dtl.setAuthor(sub.get(2).text());
 					dtl.setDate(sub.get(3).text());
 					dtl.setHit(Integer.parseInt(sub.get(4).text()));
 										
@@ -236,6 +240,7 @@ public class DcinsideBbsArticle {
 	
 	public static void main(String ... v) {
 		String seedId = "10000";
+		WebDocWrapperUtil wUtil = new WebDocWrapperUtil();
 		
 //		showAllNode();
 //		bbsList();
@@ -248,22 +253,22 @@ public class DcinsideBbsArticle {
 			System.out.println(i++ + " -> " + line);
 			if(i<5) {
 //				extContents(line.getUrl());
-//				System.out.println("FILTERED_CONTENT>" + getContents(line.getUrl()));
+				System.out.println("FILTERED_CONTENT>" + getContents(line.getUrl()));
 				
-				WebDocBbs bbsCon = getContents(line.getUrl());
-				
-				NewsSummaryRow nsRow = new NewsSummaryRow();
-				nsRow.setDocNo(String.valueOf(line.getNo()));
-				nsRow.setAnchorText(line.getTitle());
-				nsRow.setContents(bbsCon.getContentsText());
-				nsRow.setSeedId(seedId);
-				nsRow.setDocTitle(bbsCon.getDocTitle());
-				if(bbsCon.getImgUrl() != null) {
-					nsRow.setMediaUrls(bbsCon.getImgUrl());
-				}
-				
-				System.out.println("Insert Row ->" + bbsCon);
-				nsTbl.putNewData(nsRow);
+//				WebDocBbs bbsCon = getContents(line.getUrl());
+//				
+//				NewsSummaryRow nsRow = new NewsSummaryRow();
+//				nsRow.setDocNo(String.valueOf(line.getNo()));
+//				nsRow.setAnchorText(line.getTitle());
+//				nsRow.setContents(bbsCon.getContentsText());
+//				nsRow.setSeedId(seedId);
+//				nsRow.setDocTitle(bbsCon.getDocTitle());
+//				if(bbsCon.getImgUrl() != null) {
+//					nsRow.setMediaUrls(bbsCon.getImgUrl());
+//				}
+//				
+//				System.out.println("Insert Row ->" + bbsCon);
+//				nsTbl.putNewData(nsRow);
 			}
 		}
 		
