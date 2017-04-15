@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="webshow/src/main/java"/>
+	<classpathentry kind="src" path="webshow/src/test/java"/>
+	<classpathentry kind="src" path="wrapper/src/main/java"/>
+	<classpathentry kind="src" path="xbase2/src/main/java"/>
+	<classpathentry kind="lib" path="webshow/.mvn/wrapper/maven-wrapper.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
