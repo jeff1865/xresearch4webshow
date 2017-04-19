@@ -105,7 +105,7 @@ public class DcinsideStock implements IBbsList, IBbsContents {
 		int i = 0;
 		for(DbbsTitleLine btl :list.getTitleLines()){
 			System.out.println(i++ + "\t" + btl);
-			if(i < 4) {
+			if(i < 3) {
 				System.out.println("CONT --> " + test.getContent(btl.getUrl())) ;
 			}
 		}
