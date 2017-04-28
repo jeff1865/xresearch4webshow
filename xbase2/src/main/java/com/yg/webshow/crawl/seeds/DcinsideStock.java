@@ -98,7 +98,7 @@ public class DcinsideStock implements IBbsList, IBbsContents {
 	
 	public static void main(String ... v) {
 		String url = "http://gall.dcinside.com/board/view/?id=stock_new2&no=1372050&page=1";
-		
+		url = "http://gall.dcinside.com/board/lists/?id=stock_new2";
 		DcinsideStock test = new DcinsideStock(url) ;
 		WebDocBbsList list = test.getList();
 		
