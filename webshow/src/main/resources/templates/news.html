@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>News</title>
+</head>
+<body>
+<p>Latest News</p>
+<table border="1">
+<tr>
+	<td>Date</td>
+	<td>No</td>
+	<td>Title</td>
+	<td>Author</td>
+	<td>Status</td>
+</tr>
+<tr th:each="news : ${lstNews}">
+	<td th:text="${news.postDate}"></td>
+	<td th:text="${news.postId}"></td>
+	<td><a href="#" th:href="${news.url}" th:text="${news.anchorTitle}"></a></td>
+	<td th:text="${news.author}"></td>
+	<td th:text="${news.status}"></td>
+</tr>
+</table>
+
+</body>
+</html>
