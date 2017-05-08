@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class CrawlDataExBo extends CrawlDataBo {
 	private String filteredContents ;
+	private String htmlContents ;
 	private String docTitle ;
 	
 	public CrawlDataExBo() {
@@ -31,4 +32,17 @@ public class CrawlDataExBo extends CrawlDataBo {
 	public String getPostDate() {
 		return new Date(super.getDocTs()).toString();
 	}
+
+	public String getHtmlContents() {
+		return htmlContents;
+	}
+
+	public void setHtmlContents(String htmlContents) {
+		this.htmlContents = htmlContents;
+	}
+	
+	public String toString() {
+		return super.toString() + " | " + this.filteredContents + " | " + this.htmlContents ;
+	}
 }
+

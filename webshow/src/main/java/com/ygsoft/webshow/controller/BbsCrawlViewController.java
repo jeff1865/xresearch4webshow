@@ -24,10 +24,21 @@ public class BbsCrawlViewController {
 	@RequestMapping("/news")
 	public String getCrawlList(Model model, @RequestParam int topN) {
 		log.info("Get News ..");
-		List<CrawlDataExBo> lstNews = this.rtCrawlTable.getLatest(topN);
+		List<CrawlDataExBo> lstNews = this.rtCrawlTable.getLatest(topN, null);
 		model.addAttribute("lstNews", lstNews) ;
 		
 		return "news" ;
+	}
+	
+	@RequestMapping("/newsContent")
+	public String getCrawlContents(Model model, @RequestParam String siteId, 
+			@RequestParam int postNo) {
+		log.info("Get News ..");
+//		List<CrawlDataExBo> lstNews = this.rtCrawlTable.getLatest(topN, null);
+		CrawlDataExBo crawlData = this.rtCrawlTable.getCrawlData(siteId, postNo) ;
+		model.addAttribute("news", crawlData) ;
+		
+		return "newsCont" ;
 	}
 	
 }

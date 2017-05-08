@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>News</title>
+</head>
+<body>
+<p th:text="${news.anchorTitle}">Latest News</p>
+
+<table border="1">
+<tr>
+	<td>ContHtml</td>
+	<td th:utext="${news.htmlContents}">No</td>
+	<td>ContText</td>
+	<td th:text="${news.filteredContents}">No</td>
+</tr>
+<tr>
+	<td> 
+		<img src="file:///Users/1002000/dev/temp20/10714693_0.jpg"></img>
+	</td>
+	<td></td>
+</tr>
+</table>
+
+</body>
+</html>
+
