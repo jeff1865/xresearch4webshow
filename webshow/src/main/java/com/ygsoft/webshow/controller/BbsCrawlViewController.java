@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ygsoft.SysConf;
-import com.ygsoft.webshow.data.CrawlDataExBo;
-import com.ygsoft.webshow.data.RtCrawlTable;
+import com.yg.webshow.crawl.data.*;
+import com.yg.webshow.crawl.seeds.NewClienPark;
+import com.yg.webshow.crawl.webdoc.template.WebDocBbs;
 
 @Controller
 public class BbsCrawlViewController {
@@ -41,4 +42,21 @@ public class BbsCrawlViewController {
 		return "newsCont" ;
 	}
 	
+	@RequestMapping("/rtContent")
+	public String getRtContents(Model model, @RequestParam String siteId, 
+			@RequestParam int postNo) {
+		log.info("Get RtNews ..");
+		
+		String url = "http://clien.net/cs2/bbs/board.php?bo_table=park";
+		url = "https://www.clien.net/service/board/park";	// New Clien
+		NewClienPark clien = new NewClienPark(url);
+		
+//		List<CrawlDataExBo> lstNews = this.rtCrawlTable.getLatest(topN, null);
+		CrawlDataExBo crawlData = this.rtCrawlTable.getCrawlData(siteId, postNo) ;
+		WebDocBbs content = clien.getContent("https://www.clien.net/service/board/park/10719290");
+		
+		model.addAttribute("news", content) ;
+		
+		return "newsCont" ;
+	}
 }
