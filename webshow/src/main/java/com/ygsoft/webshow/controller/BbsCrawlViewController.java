@@ -54,7 +54,7 @@ public class BbsCrawlViewController {
 //		List<CrawlDataExBo> lstNews = this.rtCrawlTable.getLatest(topN, null);
 		CrawlDataExBo crawlData = this.rtCrawlTable.getCrawlData(siteId, postNo) ;
 		WebDocBbs content = clien.getContent("https://www.clien.net/service/board/park/10719290");
-		
+				
 		model.addAttribute("news", content) ;
 		
 		return "newsCont" ;

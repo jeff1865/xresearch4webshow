@@ -23,6 +23,8 @@ public class SysConf {
 		
 //	private static HbaseConf hbaseConf = null;
 	
+	public static final String IMG_DIR = "/Users/1002000/dev/temp20/"; 
+	
 	public SysConf() {
 		;
 	}
