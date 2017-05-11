@@ -21,13 +21,13 @@ public class MediaFileController {
 		;
 	}
 	
-	@RequestMapping(value = "/files/{file_name}/dn", 
+	@RequestMapping(value = "/files/{site_id}/{file_name}/dn", 
 			produces = {"image/jpeg", "image/gif", "image/png"}, method = RequestMethod.GET)
 	@ResponseBody
-	public FileSystemResource getFile(@PathVariable("file_name") String fileName) {
-		log.info("Resource File Requested :" + fileName);
+	public FileSystemResource getFile(@PathVariable("site_id") String siteId, @PathVariable("file_name") String fileName) {
+		log.info("Resource File Requested :" + siteId + "/" + fileName);
 		
-		fileName = SysConf.IMG_DIR + fileName ;
+		fileName = SysConf.IMG_DIR + siteId + "/" + fileName ;
 		File imgFile = new File(fileName);
 		
 	    return new FileSystemResource(imgFile); 

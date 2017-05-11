@@ -23,6 +23,7 @@
 	<logger name="org.hibernate.SQL" level="INFO"/>
 	<logger name="org.quartz.core" level="INFO"/>
 	<logger name="org.h2.server.web" level="INFO"/>
+ 	<logger name="org.apache.http.wire" level="INFO"/>	
  
 	<root level="INFO">
 		<appender-ref ref="dailyRollingFileAppender" />

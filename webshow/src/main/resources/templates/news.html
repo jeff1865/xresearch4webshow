@@ -17,7 +17,11 @@
 <tr th:each="news : ${lstNews}">
 	<td th:text="${news.postDate}"></td>
 	<td th:text="${news.postId}"></td>
-	<td><a href="#" th:href="${news.url}" th:text="${news.anchorTitle}"></a></td>
+	<td>
+		<!-- <a href="#" th:href="${news.url}" th:text="${news.anchorTitle}"></a> -->
+		<a href="#" th:href="@{/rtContent.html(siteId=clien.park, postNo=${news.postId})}" 
+			th:text="${news.anchorTitle}"></a>
+	</td>
 	<td th:text="${news.author}"></td>
 	<td th:text="${news.status}"></td>
 </tr>
